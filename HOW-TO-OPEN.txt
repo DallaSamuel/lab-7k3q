@@ -10,3 +10,5 @@ Test files in this folder (all made up):
 - Or skip files: Settings > Demo data > Add demo (40 made-up trades, removable)
 
 Run the importer tests:  node --test
+
+If you edit index.html: run  python seal.py index.html  afterwards (it updates the security policy hashes), then  node --test  to confirm.

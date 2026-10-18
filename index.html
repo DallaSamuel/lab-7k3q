@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-DmPJbe0/TqrYPaXcKUBdf1WBHkLyqVitpP6t9pKIvW8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <title>PipFrame Trade Calculator</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -194,6 +195,26 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 #clrBtn,#clrYes{padding-left:0}
 .editbox{border:1px solid rgba(212,175,55,.45);border-radius:14px;padding:12px;margin:10px 0;background:rgba(212,175,55,.05)}.editbox>div{margin-bottom:8px}.editbox .err{margin:4px 0 8px}
 .howto{margin:0 0 10px 18px;padding:0;font-size:.88rem}.howto li{margin:6px 0}.buildline{font-size:.72rem;color:var(--mute);text-align:center;margin:10px 8px 4px}.demotag{margin-left:6px;font-size:.62rem;letter-spacing:.12em;padding:2px 6px;border-radius:6px;border:1px solid rgba(212,175,55,.5);color:#D4AF37;vertical-align:middle}
+.jseg{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:linear-gradient(180deg,#1a1c20,#0b0c0e);border:1px solid rgba(212,175,55,.28);border-radius:16px;padding:5px;margin-bottom:14px;box-shadow:inset 0 2px 6px rgba(0,0,0,.6)}
+.jseg button{min-height:46px;border:0;border-radius:12px;background:transparent;color:var(--mute);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer}
+.jseg button[aria-selected="true"]{background:linear-gradient(180deg,#f7e08a,#D4AF37 55%,#b58f24);color:#121212;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 3px 10px rgba(212,175,55,.25)}
+.subh{font:600 .95rem/1.2 Poppins,system-ui,sans-serif;color:#D4AF37;margin:18px 0 8px}
+.psec{background:#101114;border:1px solid #2a2c31;border-radius:16px;padding:12px;margin-bottom:12px}
+.ptitle{font:600 .95rem/1.2 Poppins,system-ui,sans-serif;color:#f4f4f6;margin:0 0 10px}
+.tfrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}.tfrow select{flex:1;min-width:0}
+.tfb{flex:0 0 42px;text-align:center;font-weight:700;font-size:.78rem;color:#121212;background:linear-gradient(180deg,#f7e08a,#D4AF37);border-radius:8px;padding:6px 0}
+.dashbtn{width:100%;min-height:44px;border:1.5px dashed rgba(212,175,55,.6);border-radius:12px;background:transparent;color:#D4AF37;font:inherit;font-weight:600;cursor:pointer}
+.addrow{display:flex;gap:8px;margin-top:8px}.addrow select,.addrow input{flex:1;min-width:0}
+.pchk{display:flex;gap:6px;align-items:stretch}.pchk .tick{flex:1;margin-bottom:8px}.pchk .mini{flex:0 0 auto;margin-bottom:8px}
+.tick .ptx b{font-weight:600}.tick .ptx small{display:block;color:var(--mute);font-size:.74rem}
+.rrow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.rbtn{min-height:48px;border:1.5px solid #34363c;border-radius:12px;background:#141518;color:var(--text);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;padding:4px}
+.rbtn[aria-pressed="true"]{background:linear-gradient(180deg,#f7e08a,#D4AF37);color:#121212;border-color:#D4AF37}
+.rbtn[aria-pressed="true"][data-r="none"]{background:#3a3d44;color:#fff;border-color:#8a8d95}
+.phint{font-size:.78rem;color:var(--mute);margin:8px 0 0;min-height:1.2em}.phint.bad{color:#ff8a7a}
+.plannote{font-size:.82rem;font-weight:600;color:#2b2308;margin:0 0 10px}.plannote.warn{color:#7a1f12;border-left:3px solid #7a1f12;padding-left:8px}
+.rtag{font-weight:700}.rtag.aplus{color:#f7e08a}.rtag.none{color:#ff8a7a}
+.pline{margin:2px 0;font-size:.88rem}
 </style>
 </head>
 <body>
@@ -291,6 +312,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <div class="resnote" id="rNote"></div>
 <div class="guardmsg" id="rGuard" hidden></div>
 <div class="logbox" id="logBox">
+<p class="plannote" id="planNote" hidden></p>
 <div class="lbl">Setup checklist <span class="grade" id="gradeBadge">not graded</span></div>
 <div id="checkList"></div>
 <button type="button" class="linkdark" id="editCheck">Edit checklist</button>
@@ -320,7 +342,15 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 </div>
 
 <div class="scr off" id="scr_journal">
-<section class="panel" aria-label="Trade journal">
+<div class="jseg" role="tablist" aria-label="Journal type"><button type="button" role="tab" id="jt_trade" aria-selected="true">Trade Journal</button><button type="button" role="tab" id="jt_plan" aria-selected="false">Analysis Journal</button></div>
+<section class="panel" id="panelPlan" aria-label="Analysis journal" hidden>
+<div class="head"><h2>Analysis journal</h2></div>
+<p class="note">What will happen: build your plan before you trade. The Trade Journal keeps what happened.</p>
+<div id="planForm"></div>
+<h3 class="subh">Saved plans</h3>
+<div id="planList"></div>
+</section>
+<section class="panel" id="panelTrade" aria-label="Trade journal">
 <div class="head"><h2>Trade journal</h2>
 <div class="tools" id="tools"></div></div>
 <div id="list"></div>
@@ -515,7 +545,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v12";
+var APP_V="v13";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -712,7 +742,7 @@ function show(o){
  var g=$("rGrid");g.innerHTML="";g.className="grid"+(o.one?" one":"");
  o.rows.forEach(function(r){var d=h("div");d.appendChild(h("span",null,r[0]));d.appendChild(h("b",null,r[1]));g.appendChild(d)});
  $("rNote").textContent=o.note||"";
- $("logBox").hidden=!o.loggable;$("rGuard").hidden=true;
+ $("logBox").hidden=!o.loggable;$("rGuard").hidden=true;if(o.loggable)drawPlanNote();
  var lb=$("logBtn");lb.disabled=false;lb.textContent="Log this trade";
  $("res").hidden=false;
  $("res").scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -871,19 +901,38 @@ function migrateV1(e){
   notes:e.note||""};
 }
 function fixEntry(e){
- if(!e||typeof e!=="object"||!e.id)return null;
- e.id=String(e.id);
- if(!e.setup||typeof e.setup!=="object")e.setup={templateId:null,templateVersion:null,checks:[],grade:"ungraded"};
- if(!Array.isArray(e.setup.checks))e.setup.checks=[];
- if(!e.mood||typeof e.mood!=="object")e.mood={before:[],beforeAt:null,after:[]};
- if(!Array.isArray(e.mood.before))e.mood.before=[];
- if(!Array.isArray(e.mood.after))e.mood.after=[];
- if(!Array.isArray(e.flags))e.flags=[];
- if(!e.result||typeof e.result!=="object")e.result={outcome:"open"};
- if(!(Date.parse(e.createdAt)>0))e.createdAt=new Date().toISOString();
- if(typeof e.notes!=="string")e.notes="";
- if(typeof e.reason!=="string")e.reason="";
- return e;
+ /* strict clean-up of every record from storage, backups and imports: wrong types become safe values, unknown keys are dropped */
+ if(!e||typeof e!=="object"||Array.isArray(e)||e.id==null||typeof e.id==="object")return null;
+ function str(v,max){return typeof v==="string"?v.slice(0,max||200):""}
+ function num(v){if(typeof v==="string"&&v.trim()!=="")v=Number(v);return typeof v==="number"&&isFinite(v)?v:null}
+ function date(v){var t=typeof v==="string"?Date.parse(v):NaN;return t>0&&t<4102444800000?new Date(t).toISOString():null}
+ function ids(v,ok,max){return Array.isArray(v)?v.filter(function(x){return typeof x==="string"&&(!ok||ok.indexOf(x)>-1)&&/^[A-Za-z0-9_\- ]{1,30}$/.test(x)}).slice(0,max||20):[]}
+ var id=String(e.id).replace(/[^\x20-\x7E]/g,"").slice(0,80);if(!id)return null;
+ var o={id:id,schemaVersion:2,source:e.source==="import"?"import":"manual"};
+ o.instrument=str(e.instrument,20).toUpperCase().replace(/[^A-Z0-9._#+-]/g,"")||"XAUUSD";
+ var dr=typeof e.direction==="string"?e.direction.toLowerCase():"";o.direction=dr==="buy"||dr==="sell"?dr:null;
+ ["lots","entry","sl","tp","stopPips","tpPips","pipValue","riskAmount","riskPct","balanceAtEntry","plannedRR","potentialProfit"].forEach(function(k){o[k]=num(e[k])});
+ if(!(o.lots>0))o.lots=0;
+ o.createdAt=date(e.createdAt)||new Date().toISOString();
+ o.editedAt=date(e.editedAt);o.tz=str(e.tz,60)||null;
+ var sesOk=Object.keys(SES).map(function(k){return SES[k]});
+ o.session=typeof e.session==="string"&&sesOk.indexOf(e.session)>-1?e.session:null;
+ o.reason=str(e.reason,2000);o.notes=str(e.notes,5000);
+ o.planId=typeof e.planId==="string"&&e.planId?str(e.planId,80):null;
+ var st=e.setup&&typeof e.setup==="object"?e.setup:{};
+ o.setup={templateId:typeof st.templateId==="string"?str(st.templateId,40):null,templateVersion:num(st.templateVersion),
+  checks:(Array.isArray(st.checks)?st.checks:[]).filter(function(c){return c&&typeof c==="object"&&typeof c.itemId==="string"}).slice(0,30).map(function(c){return{itemId:str(c.itemId,40),checked:c.checked===true}}),
+  grade:["A+","B","C","ungraded"].indexOf(st.grade)>-1?st.grade:"ungraded"};
+ var mo=e.mood&&typeof e.mood==="object"?e.mood:{};
+ o.mood={before:ids(mo.before,null,10).map(function(x){return x.toLowerCase()}),beforeAt:date(mo.beforeAt),after:ids(mo.after,POST,10)};
+ o.flags=ids(e.flags,FLAGS.map(function(f){return f[0]}),5);
+ var r=e.result&&typeof e.result==="object"?e.result:{};
+ var oc=["open","TP","SL","BE","manual"].indexOf(r.outcome)>-1?r.outcome:"open";
+ var pnl=num(r.pnl);
+ if(oc!=="open"&&pnl==null)oc="open";
+ o.result=oc==="open"?{outcome:"open"}:{outcome:oc,exitPrice:num(r.exitPrice),pnl:pnl,actualR:num(r.actualR),closedAt:date(r.closedAt)};
+ if(oc==="open"&&r.exitPrice!=null&&num(r.exitPrice)!=null)o.result.exitPrice=num(r.exitPrice);
+ return o;
 }
 function loadTemplate(){
  try{var r=localStorage.getItem(TKEY),t=r?JSON.parse(r):null;
@@ -904,7 +953,7 @@ function load(){
   if(!Array.isArray(entries))entries=[];
   entries=entries.map(fixEntry).filter(Boolean);
  }catch(e){entries=[];if(r){try{localStorage.setItem(JKEY+"-corrupt",r)}catch(x){}}else memOnly=true}
- loadTemplate();
+ loadTemplate();loadPlans();
 }
 function bump(k){try{usage[k]=(usage[k]||0)+1;usage.days[new Date().toISOString().slice(0,10)]=1;localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){}}
 function storeNoteText(inSettings){
@@ -1122,6 +1171,7 @@ function logTrade(){
   mood:{before:preMood.slice(),beforeAt:preMood.length?preMoodAt:null,after:[]},
   flags:[],result:{outcome:"open"},notes:""};
  try{e.tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(x){}
+ var ap=activePlanFor(l.inst);e.planId=ap?ap.id:null;
  entries.unshift(e);bump("log");openIds[e.id]=1;save();render();
  if(window.__toast)window.__toast("Logged: "+e.instrument+" "+(e.direction||"").toUpperCase()+" "+n(e.lots,2)+" lots","Open journal",function(){window.__go("journal")});
  var lb=$("logBtn");lb.disabled=true;lb.textContent="Logged ✓";
@@ -1143,8 +1193,9 @@ function exportCsv(){
  entries.slice().reverse().forEach(function(e){
   var tick={};e.setup.checks.forEach(function(c){tick[c.itemId]=c.checked?1:0});
   var r=e.result||{};
-  var cells=[[e.id],[e.createdAt],[e.instrument],[e.direction||""],[e.lots!=null?Number(e.lots).toFixed(2):""],[e.entry],[e.sl],[e.tp],[e.stopPips],[e.riskAmount!=null?Number(e.riskAmount).toFixed(2):""],
-   [e.session||""],[e.setup.grade],[e.mood.before.join(";"),1],[e.mood.beforeAt||""],[e.mood.after.join(";"),1],[e.flags.join(";"),1],[r.outcome||""],[r.exitPrice!=null?r.exitPrice:""],
+  function N(v){return typeof v==="number"?[v]:[v,1]}
+  var cells=[[e.id,1],[e.createdAt,1],[e.instrument,1],[e.direction||"",1],[e.lots!=null&&isFinite(Number(e.lots))?Number(e.lots).toFixed(2):"",1],N(e.entry),N(e.sl),N(e.tp),N(e.stopPips),[e.riskAmount!=null&&isFinite(Number(e.riskAmount))?Number(e.riskAmount).toFixed(2):""],
+   [e.session||"",1],[e.setup.grade,1],[e.mood.before.join(";"),1],[e.mood.beforeAt||""],[e.mood.after.join(";"),1],[e.flags.join(";"),1],[r.outcome||"",1],N(r.exitPrice!=null?r.exitPrice:""),
    [typeof r.pnl==="number"?r.pnl.toFixed(2):""],[typeof r.actualR==="number"?r.actualR.toFixed(2):""],[e.reason,1],[e.notes,1]]
    .concat(ids.map(function(i){return [tick[i]!=null?tick[i]:""]}));
   rows.push(cells.map(function(c){return csvCell(c[0],c[1])}).join(","));
@@ -1154,19 +1205,22 @@ function exportCsv(){
 }
 function exportBackup(){
  bump("bak");var now=new Date();settings.backedUp=entries.length;try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}
- dlBlob("pipframe-backup-"+now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate())+".json",new Blob([JSON.stringify({app:"pipframe",schemaVersion:2,exportedAt:now.toISOString(),template:tmpl,entries:entries},null,1)],{type:"application/json"}));
+ dlBlob("pipframe-backup-"+now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate())+".json",new Blob([JSON.stringify({app:"pipframe",schemaVersion:2,exportedAt:now.toISOString(),template:tmpl,entries:entries,analysis:plans},null,1)],{type:"application/json"}));
  render();
 }
 function restoreBackup(file){
+ if(file.size>20*1024*1024){backupMsg="That file is too large to be a PipFrame backup, so nothing was changed.";render();return}
  var rd=new FileReader();
  rd.onload=function(){
   try{
    var o=JSON.parse(rd.result);
    if(!o||o.app!=="pipframe"||!Array.isArray(o.entries))throw new Error("bad");
    var have={};entries.forEach(function(e){have[e.id]=1});
-   var add=o.entries.map(fixEntry).filter(function(e){return e&&!have[e.id]});
+   var add=o.entries.slice(0,20000).map(fixEntry).filter(function(e){return e&&!have[e.id]});
    entries=entries.concat(add).sort(function(a,b){return Date.parse(b.createdAt)-Date.parse(a.createdAt)});
-   save();bump("rst");backupMsg="Restored "+add.length+" new entr"+(add.length===1?"y":"ies")+" ("+(o.entries.length-add.length)+" already here or skipped).";
+   var pAdd=Array.isArray(o.analysis)?o.analysis.slice(0,5000).map(fixPlan).filter(function(p){return p&&!planById(p.id)}):[];
+   if(pAdd.length){plans=plans.concat(pAdd).sort(function(a,b){return Date.parse(b.createdAt)-Date.parse(a.createdAt)});savePlans()}
+   save();bump("rst");backupMsg="Restored "+add.length+" new entr"+(add.length===1?"y":"ies")+" ("+(o.entries.length-add.length)+" already here or skipped)"+(pAdd.length?" and "+pAdd.length+" plan"+(pAdd.length===1?"":"s"):"")+".";
   }catch(e){backupMsg="That file isn't a PipFrame backup, so nothing was changed."}
   render();
  };
@@ -1174,6 +1228,7 @@ function restoreBackup(file){
 }
 
 function importReport(file){
+ if(file.size>5*1024*1024){backupMsg="That file is too large to be a broker report, so nothing was imported.";render();return}
  var rd=new FileReader();
  rd.onload=function(){
   try{
@@ -1294,6 +1349,7 @@ function renderEntry(e){
  row("Risk:Reward",e.plannedRR?"1 : "+n(e.plannedRR,2):"–");
  row("Potential profit",e.potentialProfit!=null?usd(e.potentialProfit):"–");
  row("Setup grade",e.setup.grade==="ungraded"?"Not graded":e.setup.grade);
+ if(e.planId){var pl0=planById(e.planId);row("Saved plan",pl0?RLAB[pl0.rating]:"Plan deleted")}
  if(editIds[e.id])card.appendChild(editForm(e,d));
  card.appendChild(dl);
 
@@ -1364,6 +1420,196 @@ function renderEntry(e){
  return card;
 }
 
+
+/* ---- analysis journal: the plan before the trade ---- */
+var PKEY="fx-calc-analysis-v1",PTKEY="fx-calc-plantmpl-v1",PDKEY="fx-calc-plandraft-v1";
+var plans=[],jmode="trade",planShown=10,planOpen={},addingTf=false,ptmpl={items:[]},draft=null;
+var TF_ALL=["W","D","H4","H1","M30","M15","M5"];
+var TF_OPTS={
+ D:["Uptrend","Downtrend","Range / Consolidation","Reversal Warning"],
+ H4:["Pullback","Order Block","Break of Structure (BOS)","Reversal Warning","Range / Consolidation","Liquidity Sweep"],
+ H1:["Break of Structure (BOS)","Order Block","Liquidity Sweep","Fair Value Gap (FVG)","Consolidation","Change of Character (CHoCH)"]};
+var TF_GENERIC=["Uptrend","Downtrend","Range / Consolidation","Reversal Warning","Pullback","Order Block","Break of Structure (BOS)","Liquidity Sweep","Fair Value Gap (FVG)","Change of Character (CHoCH)"];
+var PLAN_ITEMS=[
+ ["c1","Calendar","News filtered (Day before & Today)"],
+ ["c2","Key levels","High/Low/Range + Asia Range (EUR/USD, Gold)"],
+ ["c3","HTF bias confirmed","Clear direction"],
+ ["c4","1H bias","Per instrument"],
+ ["c5","Firm & Account","Equity floor, buffer, Risk $, soft/hard stops"],
+ ["c6","Final hour prep","Refresh calendar, server time, ATR & spread"],
+ ["c7","HALT state","Not Hungry, Angry, Lonely, Tired"]];
+var RLAB={aplus:"A+ setup active",bplus:"B+ setup",none:"No Trade"};
+function defaultPlanItems(){return PLAN_ITEMS.map(function(r){return {id:r[0],label:r[1]+" — "+r[2]}})}
+function planText(v,max){return typeof v==="string"?v.slice(0,max||200):""}
+function fixPlan(p){
+ if(!p||typeof p!=="object"||Array.isArray(p)||p.id==null||typeof p.id==="object")return null;
+ var id=String(p.id).replace(/[^\x20-\x7E]/g,"").slice(0,80);if(!id)return null;
+ var t=typeof p.createdAt==="string"?Date.parse(p.createdAt):NaN;
+ var o={id:id,schemaVersion:1,createdAt:t>0&&t<4102444800000?new Date(t).toISOString():new Date().toISOString()};
+ o.instrument=planText(p.instrument,20).toUpperCase().replace(/[^A-Z0-9._#+-]/g,"")||null;
+ o.htf=(Array.isArray(p.htf)?p.htf:[]).filter(function(x){return x&&typeof x==="object"&&TF_ALL.indexOf(x.tf)>-1&&typeof x.bias==="string"&&x.bias}).slice(0,10).map(function(x){return {tf:x.tf,bias:planText(x.bias,60).replace(/[^A-Za-z0-9 \/()+\-]/g,"")}});
+ o.checks=(Array.isArray(p.checks)?p.checks:[]).filter(function(c){return c&&typeof c==="object"&&typeof c.label==="string"}).slice(0,40).map(function(c){return {itemId:planText(c.itemId,40),label:planText(c.label,160),checked:c.checked===true}});
+ o.rating=p.rating==="aplus"||p.rating==="bplus"||p.rating==="none"?p.rating:null;
+ if(!o.rating)return null;
+ o.note=planText(p.note,2000);o.tz=planText(p.tz,60)||null;
+ return o;
+}
+function newDraft(){return {htf:{},extra:[],checks:{},rating:null,inst:"",note:""}}
+function cleanDraft(d){
+ var n=newDraft();if(!d||typeof d!=="object")return n;
+ if(d.htf&&typeof d.htf==="object")TF_ALL.forEach(function(tf){if(typeof d.htf[tf]==="string")n.htf[tf]=planText(d.htf[tf],60)});
+ if(Array.isArray(d.extra))n.extra=d.extra.filter(function(x,i,a){return TF_ALL.indexOf(x)>-1&&["D","H4","H1"].indexOf(x)<0&&a.indexOf(x)===i});
+ if(d.checks&&typeof d.checks==="object")Object.keys(d.checks).slice(0,60).forEach(function(k){if(d.checks[k]===true&&/^[A-Za-z0-9_-]{1,30}$/.test(k))n.checks[k]=true});
+ if(d.rating==="aplus"||d.rating==="bplus"||d.rating==="none")n.rating=d.rating;
+ n.inst=planText(d.inst,20).toUpperCase().replace(/[^A-Z0-9._#+-]/g,"");n.note=planText(d.note,2000);
+ return n;
+}
+function loadPlans(){
+ try{var r=localStorage.getItem(PKEY);plans=r?JSON.parse(r):[]}catch(e){plans=[]}
+ if(!Array.isArray(plans))plans=[];plans=plans.map(fixPlan).filter(Boolean);
+ ptmpl.items=defaultPlanItems();
+ try{var t=JSON.parse(localStorage.getItem(PTKEY)||"null");
+  if(t&&Array.isArray(t.items)){var it=t.items.filter(function(x){return x&&typeof x.id==="string"&&/^[A-Za-z0-9_-]{1,30}$/.test(x.id)&&typeof x.label==="string"&&x.label.trim()}).slice(0,40).map(function(x){return {id:x.id,label:planText(x.label,100),custom:x.custom===true}});
+   if(it.length)ptmpl.items=it}}catch(e){}
+ try{draft=cleanDraft(JSON.parse(localStorage.getItem(PDKEY)||"null"))}catch(e){draft=newDraft()}
+}
+function savePlans(){try{localStorage.setItem(PKEY,JSON.stringify(plans))}catch(e){memOnly=true}}
+function savePtmpl(){try{localStorage.setItem(PTKEY,JSON.stringify(ptmpl))}catch(e){}}
+function saveDraft(){try{localStorage.setItem(PDKEY,JSON.stringify(draft))}catch(e){}}
+function planById(id){for(var i=0;i<plans.length;i++)if(plans[i].id===id)return plans[i];return null}
+function activePlanFor(inst){
+ var now=Date.now();
+ for(var i=0;i<plans.length;i++){var p=plans[i];if(now-Date.parse(p.createdAt)<18*3600e3&&(!p.instrument||p.instrument===inst))return p}
+ return null;
+}
+function drawPlanNote(){
+ var n=$("planNote"),ap=activePlanFor($("inst").value);
+ if(!ap){n.hidden=true;return}
+ var tm=new Date(ap.createdAt);tm=pad(tm.getHours())+":"+pad(tm.getMinutes());
+ n.className="plannote"+(ap.rating==="none"?" warn":"");
+ n.textContent=ap.rating==="none"?"Your saved plan from "+tm+" says No Trade. Pause before you log this.":"Saved plan from "+tm+": "+RLAB[ap.rating]+".";
+ n.hidden=false;
+}
+function planCounts(){var t=ptmpl.items.length,k=ptmpl.items.filter(function(i){return draft.checks[i.id]}).length;return [k,t]}
+function drawPlanHint(msg,bad){
+ var el=$("planHint");if(!el)return;
+ if(msg){el.textContent=msg;el.className="phint"+(bad?" bad":"");return}
+ var c=planCounts(),open=c[1]-c[0];
+ el.className="phint";
+ el.textContent=c[0]+" of "+c[1]+" checklist items ticked"+(draft.rating==="aplus"&&open?". A+ is chosen but "+open+" item"+(open===1?" is":"s are")+" still open.":".");
+}
+function planLabel(l){var i=l.indexOf(" — ");return i>0?[l.slice(0,i),l.slice(i+3)]:[l,""]}
+function drawPlanForm(){
+ var f=$("planForm");f.innerHTML="";
+ // higher timeframes
+ var a=h("div","psec");a.appendChild(h("div","ptitle","Higher timeframe analysis"));
+ ["D","H4","H1"].concat(draft.extra).forEach(function(tf){
+  var row=h("div","tfrow");row.appendChild(h("span","tfb",tf));
+  var sel=h("select");sel.setAttribute("aria-label",tf+" analysis");
+  var o0=h("option",null,"Select…");o0.value="";sel.appendChild(o0);
+  (TF_OPTS[tf]||TF_GENERIC).forEach(function(x){var o=h("option",null,x);o.value=x;sel.appendChild(o)});
+  sel.value=draft.htf[tf]||"";
+  sel.onchange=function(){draft.htf[tf]=sel.value;saveDraft()};
+  row.appendChild(sel);
+  if(draft.extra.indexOf(tf)>-1){var rm=h("button","mini","×");rm.type="button";rm.setAttribute("aria-label","Remove "+tf);rm.onclick=function(){draft.extra=draft.extra.filter(function(x){return x!==tf});delete draft.htf[tf];saveDraft();drawPlanForm()};row.appendChild(rm)}
+  a.appendChild(row);
+ });
+ var free=TF_ALL.filter(function(tf){return ["D","H4","H1"].indexOf(tf)<0&&draft.extra.indexOf(tf)<0});
+ if(free.length){
+  var ab=h("button","dashbtn","+ Add timeframe");ab.type="button";ab.setAttribute("aria-expanded",addingTf?"true":"false");
+  ab.onclick=function(){addingTf=!addingTf;drawPlanForm()};a.appendChild(ab);
+  if(addingTf){var ar=h("div","addrow"),as=h("select");as.setAttribute("aria-label","Timeframe to add");free.forEach(function(tf){var o=h("option",null,tf);o.value=tf;as.appendChild(o)});
+   var go=h("button","btn","Add");go.type="button";go.style.flex="0 0 80px";go.onclick=function(){draft.extra.push(as.value);addingTf=false;saveDraft();drawPlanForm()};
+   ar.appendChild(as);ar.appendChild(go);a.appendChild(ar)}
+ }
+ f.appendChild(a);
+ // checklist
+ var b=h("div","psec");b.appendChild(h("div","ptitle","Checklist"));
+ ptmpl.items.forEach(function(it){
+  var row=h("div","pchk");
+  var bt=h("button","tick");bt.type="button";bt.setAttribute("aria-pressed",!!draft.checks[it.id]);
+  bt.appendChild(h("span","bx","✓"));
+  var tx=h("span","ptx"),pl=planLabel(it.label);tx.appendChild(h("b",null,pl[0]));if(pl[1])tx.appendChild(h("small",null,pl[1]));bt.appendChild(tx);
+  bt.onclick=function(){draft.checks[it.id]=!draft.checks[it.id];saveDraft();bt.setAttribute("aria-pressed",!!draft.checks[it.id]);drawPlanHint()};
+  row.appendChild(bt);
+  if(it.custom){var rm=h("button","mini","Remove");rm.type="button";rm.setAttribute("aria-label","Remove "+it.label);rm.onclick=function(){ptmpl.items=ptmpl.items.filter(function(x){return x.id!==it.id});delete draft.checks[it.id];savePtmpl();saveDraft();drawPlanForm()};row.appendChild(rm)}
+  b.appendChild(row);
+ });
+ var ar2=h("div","addrow"),ci=h("input");ci.type="text";ci.maxLength=100;ci.placeholder="Add your own item";ci.setAttribute("aria-label","New checklist item");
+ var cb=h("button","btn","Add");cb.type="button";cb.style.flex="0 0 80px";
+ function addItem(){var v=ci.value.trim();if(!v||ptmpl.items.length>=40)return;ptmpl.items.push({id:"u"+Date.now().toString(36),label:v,custom:true});savePtmpl();drawPlanForm()}
+ cb.onclick=addItem;ci.onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();addItem()}};
+ ar2.appendChild(ci);ar2.appendChild(cb);b.appendChild(ar2);f.appendChild(b);
+ // rating
+ var c=h("div","psec");c.appendChild(h("div","ptitle","Criteria rating"));
+ var rr=h("div","rrow");
+ [["aplus","A+ Setup active"],["bplus","B+ Setup"],["none","No Trade"]].forEach(function(r){
+  var bt=h("button","rbtn",r[1]);bt.type="button";bt.setAttribute("data-r",r[0]);bt.setAttribute("aria-pressed",draft.rating===r[0]);
+  bt.onclick=function(){draft.rating=draft.rating===r[0]?null:r[0];saveDraft();[].forEach.call(rr.children,function(x){x.setAttribute("aria-pressed",draft.rating===x.getAttribute("data-r"))});drawPlanHint()};
+  rr.appendChild(bt)});
+ c.appendChild(rr);f.appendChild(c);
+ // plan
+ var d=h("div","psec");d.appendChild(h("div","ptitle","Plan"));
+ d.appendChild(h("label",null,"Instrument (optional)"));
+ var is=h("select");is.setAttribute("aria-label","Instrument for this plan");var io=h("option",null,"Any instrument");io.value="";is.appendChild(io);
+ Object.keys(SPEC).forEach(function(k){var o=h("option",null,k);o.value=k;is.appendChild(o)});
+ is.value=draft.inst&&SPEC[draft.inst]?draft.inst:"";is.onchange=function(){draft.inst=is.value;saveDraft()};d.appendChild(is);
+ d.appendChild(h("label",null,"Plan notes"));
+ var ta=h("textarea");ta.rows=3;ta.maxLength=2000;ta.placeholder="Entry trigger, where you are wrong, target. Keep it short.";ta.value=draft.note||"";
+ ta.oninput=function(){draft.note=ta.value;saveDraft()};d.appendChild(ta);
+ var hint=h("p","phint");hint.id="planHint";hint.setAttribute("role","status");d.appendChild(hint);
+ var br=h("div","btnrow");
+ var sv=h("button","btn","Save to Journal");sv.type="button";sv.id="planSave";sv.onclick=savePlan;
+ var cl=h("button","btn ghost","Clear");cl.type="button";cl.id="planClear";cl.onclick=function(){draft=newDraft();addingTf=false;saveDraft();drawPlanForm()};
+ br.appendChild(sv);br.appendChild(cl);d.appendChild(br);f.appendChild(d);
+ drawPlanHint();
+}
+function savePlan(){
+ if(!draft.rating){drawPlanHint("Choose a rating first: A+ Setup active, B+ Setup or No Trade.",true);return}
+ var htf=["D","H4","H1"].concat(draft.extra).filter(function(tf){return draft.htf[tf]}).map(function(tf){return {tf:tf,bias:draft.htf[tf]}});
+ var p=fixPlan({id:Date.now()+"-"+Math.random().toString(36).slice(2,7),createdAt:new Date().toISOString(),instrument:draft.inst||null,htf:htf,
+  checks:ptmpl.items.map(function(i){return {itemId:i.id,label:i.label,checked:!!draft.checks[i.id]}}),rating:draft.rating,note:draft.note.trim(),
+  tz:(function(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return ""}})()});
+ if(!p)return;
+ plans.unshift(p);savePlans();bump("plan");planOpen[p.id]=1;
+ draft=newDraft();addingTf=false;saveDraft();drawPlan();
+ if(window.__toast)window.__toast("Plan saved: "+RLAB[p.rating],"",null);
+}
+function drawPlanList(){
+ var L=$("planList");L.innerHTML="";
+ if(!plans.length){L.appendChild(h("p","empty","No plans yet. Fill in the form above and tap Save to Journal."));return}
+ plans.slice(0,planShown).forEach(function(p){
+  var card=h("div","entry"),left=h("div"),dt=new Date(p.createdAt);
+  left.appendChild(h("div","name",p.instrument||"Any instrument"));
+  left.appendChild(h("div","when",dt.toLocaleDateString(undefined,{month:"short",day:"numeric"})+", "+pad(dt.getHours())+":"+pad(dt.getMinutes())));
+  var sm=h("button","esum");sm.type="button";sm.appendChild(left);
+  var em=h("div","emeta");em.appendChild(h("div","rtag "+p.rating,RLAB[p.rating]));
+  var tk=p.checks.filter(function(c){return c.checked}).length;
+  em.appendChild(h("div","esub",tk+" of "+p.checks.length+" ticked"));sm.appendChild(em);sm.appendChild(h("span","chev","›"));
+  var body=h("div","ebody");
+  if(p.htf.length){p.htf.forEach(function(x){body.appendChild(h("div","pline",x.tf+" · "+x.bias))})}else body.appendChild(h("div","pline","No higher timeframe picked"));
+  var un=p.checks.filter(function(c){return !c.checked});
+  if(un.length)body.appendChild(h("div","note","Not ticked: "+un.map(function(c){return planLabel(c.label)[0]}).join(", ")));
+  if(p.note)body.appendChild(h("div","pline",p.note));
+  var linked=entries.filter(function(e){return e.planId===p.id}).length;
+  body.appendChild(h("div","note",linked?linked+" trade"+(linked===1?"":"s")+" logged under this plan.":"No trades logged under this plan yet."));
+  var del=h("button","link del","Delete plan");del.type="button";
+  del.onclick=function(){var at=plans.indexOf(p);if(at<0)return;plans.splice(at,1);savePlans();drawPlan();render();
+   if(window.__toast)window.__toast("Deleted a plan","Undo",function(){if(planById(p.id))return;plans.splice(Math.min(at,plans.length),0,p);savePlans();drawPlan();render()})};
+  body.appendChild(del);
+  body.hidden=!planOpen[p.id];sm.setAttribute("aria-expanded",planOpen[p.id]?"true":"false");
+  sm.onclick=function(){var o=body.hidden;body.hidden=!o;planOpen[p.id]=o?1:0;sm.setAttribute("aria-expanded",o?"true":"false")};
+  card.appendChild(sm);card.appendChild(body);L.appendChild(card);
+ });
+ if(plans.length>planShown){var mb=h("button","btn ghost","Show more plans ("+(plans.length-planShown)+" hidden)");mb.type="button";mb.onclick=function(){planShown+=10;drawPlanList()};L.appendChild(mb)}
+}
+function drawPlan(){
+ var tp=jmode==="plan";
+ $("panelTrade").hidden=tp;$("panelPlan").hidden=!tp;
+ $("jt_trade").setAttribute("aria-selected",!tp);$("jt_plan").setAttribute("aria-selected",tp);
+ if(tp){drawPlanForm();drawPlanList()}
+}
+
 /* ---- review (plain counting, no AI) ---- */
 function isClosed(t){return t.result&&t.result.outcome!=="open"&&typeof t.result.pnl==="number"}
 function stat(list){
@@ -1411,6 +1657,7 @@ function renderReview(){
  section("By setup grade",groupBy(closed.filter(function(t){return t.setup.grade!=="ungraded"}),function(t){return t.setup.grade}).map(function(p){return [p[0],fmtStat(p[1])]}));
  section("By mood before the trade",groupBy(closed.filter(function(t){return t.mood.beforeAt}),function(t){return t.mood.before.length?t.mood.before:null}).map(function(p){return [moodLabel(p[0]),fmtStat(p[1])]}));
  section("By session",groupBy(closed,function(t){return t.session}).map(function(p){return [SESL[p[0]]||p[0],fmtStat(p[1])]}));
+ section("By saved plan",groupBy(closed,function(t){if(!t.planId)return "No saved plan";var p=planById(t.planId);return p?RLAB[p.rating]:null}).map(function(p){return [p[0],fmtStat(p[1])]}));
  var skipped={};
  closed.filter(function(t){return t.result.pnl<0}).forEach(function(t){t.setup.checks.forEach(function(c){if(!c.checked)skipped[c.itemId]=(skipped[c.itemId]||0)+1})});
  var labelOf={};tmpl.items.forEach(function(i){labelOf[i.id]=i.label});
@@ -1418,7 +1665,7 @@ function renderReview(){
  var rb=closed.filter(function(t){return t.flags.indexOf("brokeRule")>-1});
  var tl=tiltList(entries),wk=Date.now()-7*864e5;
  var wkAll=entries.filter(function(t){return Date.parse(t.createdAt)>=wk}),wkRb=wkAll.filter(function(t){return isClosed(t)&&t.flags.indexOf("brokeRule")>-1});
- section("Discipline",[["Trades where you broke a rule",rb.length+(rb.length?" ("+money(sum(rb.map(function(t){return t.result.pnl}))+0)+")":"")],["Possible tilt trades",tl.length+" (within "+TILT_MIN+" min of a loss, or over "+TILT_X+"x your recent size)"]]);
+ section("Discipline",[["Trades where you broke a rule",rb.length+(rb.length?" ("+money(sum(rb.map(function(t){return t.result.pnl}))+0)+")":"")],["Trades after a No Trade plan",String(closed.filter(function(t){var p=t.planId&&planById(t.planId);return p&&p.rating==="none"}).length)],["Possible tilt trades",tl.length+" (within "+TILT_MIN+" min of a loss, or over "+TILT_X+"x your recent size)"]]);
  section("Last 7 days",[["Trades taken",String(wkAll.length)],["Rule breaks",wkRb.length+(wkRb.length?" ("+money(sum(wkRb.map(function(t){return t.result.pnl})))+")":"")]]);
  box.appendChild(h("p","note","Describes what happened in your own trades. It is not advice and does not predict anything."));
 }
@@ -1436,7 +1683,7 @@ function render(){
  }
  var note=(backupMsg?backupMsg+" ":"")+storeNoteText();
  $("storeNote").textContent=note;var dn=$("dataNote");if(dn)dn.textContent=(backupMsg?backupMsg+" ":"")+storeNoteText(true);
- renderReview();
+ renderReview();if(typeof drawPlan==="function"&&jmode==="plan")drawPlanList();
  if(window.__navRefresh)window.__navRefresh();
 }
 fillSessions($("rSes"),"");
@@ -1544,12 +1791,21 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   }
   return out;
  }
+ function makeDemoPlans(){
+  var out=[],R=["aplus","aplus","bplus","none","bplus","aplus"],now=Date.now();
+  for(var i=0;i<6;i++){
+   out.push(fixPlan({id:"demo-p"+i,createdAt:new Date(now-(i+1)*86400000*1.3).toISOString(),instrument:i%3===0?"XAUUSD":"",
+    htf:[{tf:"D",bias:i%2?"Range / Consolidation":"Uptrend"},{tf:"H4",bias:"Pullback"},{tf:"H1",bias:"Break of Structure (BOS)"}],
+    checks:ptmpl.items.map(function(it,j){return {itemId:it.id,label:it.label,checked:R[i]==="aplus"?true:j<4}}),rating:R[i],note:"Demo plan: wait for the retest, stop under the sweep."}));
+  }
+  return out;
+ }
  function demoCount(){return entries.filter(function(t){return String(t.id).indexOf("demo-")===0}).length}
  $("demoAdd").onclick=function(){
   if(demoCount()){$("demoNote").textContent="Demo trades are already added.";return}
-  entries=entries.concat(makeDemo()).sort(function(a,b){return Date.parse(b.createdAt)-Date.parse(a.createdAt)});save();render();$("testPre").textContent=buildReport();
+  plans=plans.concat(makeDemoPlans());savePlans();drawPlan();entries=entries.concat(makeDemo()).sort(function(a,b){return Date.parse(b.createdAt)-Date.parse(a.createdAt)});save();render();$("testPre").textContent=buildReport();
   $("demoNote").textContent="Added 40 demo trades. Open Review to see them. Remove them here when you are done."};
- $("demoDel").onclick=function(){var n0=demoCount();entries=entries.filter(function(t){return String(t.id).indexOf("demo-")!==0});save();render();$("testPre").textContent=buildReport();
+ $("demoDel").onclick=function(){var n0=demoCount();plans=plans.filter(function(p){return String(p.id).indexOf("demo-")!==0});savePlans();drawPlan();entries=entries.filter(function(t){return String(t.id).indexOf("demo-")!==0});save();render();$("testPre").textContent=buildReport();
   $("demoNote").textContent=n0?"Removed "+n0+" demo trades. Your own trades were not touched.":"There are no demo trades to remove."};
  function drawBuild(){
   var inst=false;try{inst=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}catch(e){}
@@ -1576,6 +1832,7 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   L.push("Device: "+osName()+", "+browserName()+", screen "+screen.width+"x"+screen.height+", installed: "+(inst?"yes":"no"));
   L.push("Using since "+first+", opened on "+days+" day"+(days===1?"":"s"));
   L.push("Calculations: "+(usage.calc||0)+" | trades logged: "+(usage.log||0)+" | exits entered: "+(usage.exit||0));
+  L.push("Plans saved: "+(usage.plan||0)+" | analysis journal opened: "+(usage.v_plan||0));
   L.push("Cards shared: "+(usage.card||0)+" | report imports: "+(usage.imp||0)+" | CSV exports: "+(usage.csv||0)+" | backups: "+(usage.bak||0)+" | restores: "+(usage.rst||0));
   L.push("Screens opened: calculate "+(usage.v_calc||0)+", journal "+(usage.v_journal||0)+", review "+(usage.v_review||0)+", settings "+(usage.v_settings||0));
   L.push("Journal: "+T+" trades ("+imp+" imported), "+pct(closed,T)+" have an exit");
@@ -1607,7 +1864,7 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
  var STEPS=[
   {s:"calc",n:"calc",t:"Size your trade",x:"Enter your balance, risk, entry and stop loss, then tap Calculate. You get the lot size to the right decimal."},
   {s:"calc",n:"calc",t:"Check, then log",x:"Tick your setup checklist and tag how you feel before you tap Log this trade. Your setup is graded A+, B or C."},
-  {s:"journal",n:"journal",t:"Your journal",x:"Every logged trade lands here as one line. Tap a row to open it, and add the exit price when the trade closes."},
+  {s:"journal",n:"journal",t:"Your journal",x:"Every logged trade lands here as one line. Tap a row to open it, and add the exit price when the trade closes. Switch to Analysis Journal to plan before you trade."},
   {s:"review",n:"review",t:"Review",x:"After 20 closed trades the app shows patterns in your own results: your grades, your moods, your sessions."},
   {s:"settings",n:"settings",t:"Settings",x:"Back up your journal, install the app, and send your test notes. Replay this tour here any time."}
  ],ti=0;
@@ -1628,6 +1885,8 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
  $("tBack").onclick=function(){if(ti>0){ti--;showStep()}};
  $("tSkip").onclick=endTour;
  $("tourGo").onclick=function(){$("welcome").hidden=true;window.__tour()};
+ $("jt_trade").onclick=function(){jmode="trade";drawPlan()};
+ $("jt_plan").onclick=function(){jmode="plan";bump("v_plan");drawPlan()};
  var rt=$("replayTour");if(rt)rt.onclick=function(){window.__tour()};
  window.__go=go;
  window.__navRefresh();
