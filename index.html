@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-DmPJbe0/TqrYPaXcKUBdf1WBHkLyqVitpP6t9pKIvW8='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-98B5Q0WzNRtkYCk9DhTsYZTePvmAzalW2lCxJ14dIKw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
+<script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -108,6 +109,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .bnav button[aria-current="page"] span{margin-bottom:6px}
 .nbadge{position:absolute;top:3px;left:calc(50% + 6px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--gold);color:#121212;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center}
 .btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.btnrow .btn{min-height:48px;font-size:.92rem}
+#sharePre{max-height:340px!important;overflow:auto!important}
 .testpre{white-space:pre-wrap;word-break:break-word;background:#0b0c0e;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px;font:.74rem/1.5 ui-monospace,Menlo,Consolas,monospace;color:#cfd2d8;margin:10px 0;max-height:260px;overflow:auto}
 .scrh{margin:6px 0 14px}
 .wtxt{margin:6px 0 4px;font-size:.9rem;color:var(--text)}
@@ -211,6 +213,8 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .rbtn{min-height:48px;border:1.5px solid #34363c;border-radius:12px;background:#141518;color:var(--text);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;padding:4px}
 .rbtn[aria-pressed="true"]{background:linear-gradient(180deg,#f7e08a,#D4AF37);color:#121212;border-color:#D4AF37}
 .rbtn[aria-pressed="true"][data-r="none"]{background:#3a3d44;color:#fff;border-color:#8a8d95}
+.sesHint{font-size:.78rem;margin:-6px 0 12px;color:rgba(0,0,0,.7)}.sesHint button{background:none;border:0;padding:0 2px;font:inherit;font-weight:700;color:#2b2308;text-decoration:underline;cursor:pointer}
+.editbar{font-size:.82rem;font-weight:600;color:var(--gold);border:1px dashed rgba(212,175,55,.5);border-radius:12px;padding:8px 12px;margin:0 0 12px}
 .phint{font-size:.78rem;color:var(--mute);margin:8px 0 0;min-height:1.2em}.phint.bad{color:#ff8a7a}
 .plannote{font-size:.82rem;font-weight:600;color:#2b2308;margin:0 0 10px}.plannote.warn{color:#7a1f12;border-left:3px solid #7a1f12;padding-left:8px}
 .rtag{font-weight:700}.rtag.aplus{color:#f7e08a}.rtag.none{color:#ff8a7a}
@@ -239,7 +243,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 <div class="two field">
 <div><label for="acc">Account currency</label><select id="acc"><option>USD</option></select></div>
-<div><label for="contract">Contract size / lot</label>
+<div><label for="contract">Contract size (per lot)</label>
 <input id="contract" type="number" inputmode="decimal" min="0" step="any"></div>
 </div>
 
@@ -321,6 +325,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <div class="chips" id="preMood"></div>
 <label for="rSes">Session (optional)</label>
 <select id="rSes"></select>
+<p class="sesHint" id="sesHint" hidden></p>
 <label for="rReason">Reason for trade (optional)</label>
 <input id="rReason" type="text" placeholder="e.g. Break and retest of resistance">
 <button class="btn logbtn" id="logBtn" type="button">Log this trade</button>
@@ -375,6 +380,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <p class="note">Put it on your home screen or desktop and it opens like an app, offline too.</p>
 <div class="installrow"><button class="btn" id="installBtn" type="button">Install app</button><p class="installhelp" id="installHelp" hidden></p></div>
 </section>
+<section class="panel" aria-label="Time"><div class="head"><h2>Time</h2></div>
+<p class="note">Times in your journal follow this setting. Your device clock is not changed, and your saved trades are not touched.</p>
+<label for="tzSel">Times shown in</label><select id="tzSel"></select>
+<p class="note" id="tzNote"></p></section>
 <section class="panel" aria-label="Demo data"><div class="head"><h2>Demo data</h2></div>
 <p class="note">Want to see the Review screen without waiting weeks? Add 40 made-up trades. They are labeled DEMO, never counted in your test report, and you can remove them in one tap.</p>
 <div class="btnrow"><button class="btn ghost" id="demoAdd" type="button">Add demo</button><button class="btn ghost" id="demoDel" type="button">Remove demo</button></div>
@@ -382,6 +391,13 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <section class="panel" aria-label="How to test"><div class="head"><h2>How to test</h2></div>
 <ol class="howto"><li>Size a trade: enter a balance, risk, entry and stop loss, then tap Calculate.</li><li>Log it, then open the Journal and add an exit price.</li><li>Fix a mistake with Edit, and try Undo after a delete.</li><li>Add demo trades above and open Review.</li><li>Install the app, turn on airplane mode, and open it again.</li><li>Tell us anything confusing, missing or wrong in Help us test below.</li></ol>
 <p class="note">PipFrame is a calculation tool, not advice. Please do not enter anything you would not want on your own device.</p></section>
+<section class="panel" id="sharePanel" aria-label="Help improve PipFrame" hidden><div class="head"><h2>Help improve PipFrame</h2></div>
+<p class="note">Off by default. If you switch it on, the app sends a small summary when you open it (at most a few times a day): your phone type and time zone, the time on your clock, how long you actively used the app, simple counts, and a list of which screens and buttons you used with the time. It never sends what you type or see: no prices, balances, profit or loss, lot sizes, notes, reasons or names. It does not send your location or your internet address. Switch it off any time.</p>
+<label class="chk" for="shareOn"><input type="checkbox" id="shareOn"> Send anonymous usage counts</label>
+<p class="note">This is exactly what would be sent:</p>
+<div class="testpre" id="sharePre" aria-label="What would be sent"></div>
+<div class="btnrow"><button class="btn ghost" id="shareNow" type="button">Send now</button></div>
+<p class="note" id="shareNote" role="status"></p></section>
 <section class="panel" aria-label="Help us test"><div class="head"><h2>Help us test</h2></div>
 <p class="note">Nothing is sent automatically. This makes a short report of how you used the app. Read it, add your thoughts, and send it to whoever gave you the app.</p>
 <label for="fbDis">How would you feel if this app disappeared tomorrow?</label>
@@ -392,7 +408,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <button class="btn" id="shareRep" type="button">Share test report</button>
 <p class="note" id="repNote"></p>
 </section>
-<details class="about"><summary>About, privacy and your data</summary><p>Everything you enter stays on this device, in this browser. There is no account, no tracking and no server copy.</p><p>Back up often from Settings, because clearing browser data deletes the journal. To remove everything, use Delete all trades in Settings.</p><p>Shared cards are made on your device and only go where you send them.</p></details>
+<details class="about"><summary>About, privacy and your data</summary><p>Everything you enter stays on this device, in this browser. There is no account, no tracking and no server copy.</p><p>Back up often from Settings, because clearing browser data deletes the journal. To remove everything, use Delete all trades in Settings.</p><p>Shared cards are made on your device and only go where you send them.</p><p id="aboutShare" hidden>Settings has a Help improve PipFrame switch. It is off until you turn it on, and it only sends the summary shown there.</p></details>
 </div>
 <p class="buildline" id="buildLine"></p>
 <p class="disclaimer">THIS IS A CALCULATION TOOL, NOT FINANCIAL ADVICE. YOU ARE RESPONSIBLE FOR YOUR OWN TRADING DECISIONS AND RISKS.</p>
@@ -545,7 +561,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v13";
+var APP_V="v17";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -602,6 +618,21 @@ var VIS={
 var ALLF=["f_dir","f_bal","f_riskmode","f_risk","f_lots","f_entry","f_exit","f_sl","f_tp","f_target","f_maxloss","f_comm","f_custom"];
 
 var $=function(i){return document.getElementById(i)};
+/* ---- time display ---- */
+function tzShow(){var z=settings&&settings.tzShow;if(typeof z==="string"&&z&&z.length<=60){try{new Intl.DateTimeFormat("en",{timeZone:z});return z}catch(e){}}return undefined}
+function fmtDay(d){return d.toLocaleDateString(undefined,{month:"short",day:"numeric",timeZone:tzShow()})}
+function fmtClock(d){try{return new Intl.DateTimeFormat([],{hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZone:tzShow()}).format(d)}catch(e){return d.toTimeString().slice(0,5)}}
+function fmtWhen(d){return fmtDay(d)+", "+fmtClock(d)}
+function zoneOffsetMs(ms,tz){var f=new Intl.DateTimeFormat("en-US",{timeZone:tz,hourCycle:"h23",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"}).formatToParts(new Date(ms)),o={};f.forEach(function(x){o[x.type]=+x.value});return Date.UTC(o.year,o.month-1,o.day,o.hour,o.minute,o.second)-Math.floor(ms/1000)*1000}
+function suggestSession(d){
+ var day=d.getUTCDay(),h=d.getUTCHours();
+ if(day===6||(day===0&&h<21)||(day===5&&h>=21))return null;
+ if(h>=12&&h<16)return "London-NY overlap";
+ if(h>=7&&h<12)return "London";
+ if(h>=16&&h<21)return "New York";
+ if(h>=21)return "Sydney";
+ return "Asian (Tokyo)";
+}
 var usage={days:{}},UKEY="fx-calc-usage-v1",openIds={},editIds={},shown=20,tab="size",mode="pct",dirSide="buy",entries=[],memOnly=false,confirming=false,last=null,catSel="all",favs=[],FKEY="fx-calc-favs-v1";
 
 function h(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
@@ -742,7 +773,7 @@ function show(o){
  var g=$("rGrid");g.innerHTML="";g.className="grid"+(o.one?" one":"");
  o.rows.forEach(function(r){var d=h("div");d.appendChild(h("span",null,r[0]));d.appendChild(h("b",null,r[1]));g.appendChild(d)});
  $("rNote").textContent=o.note||"";
- $("logBox").hidden=!o.loggable;$("rGuard").hidden=true;if(o.loggable)drawPlanNote();
+ $("logBox").hidden=!o.loggable;$("rGuard").hidden=true;if(o.loggable){drawPlanNote();drawSesHint()}
  var lb=$("logBtn");lb.disabled=false;lb.textContent="Log this trade";
  $("res").hidden=false;
  $("res").scrollIntoView({behavior:"smooth",block:"nearest"});
@@ -955,7 +986,7 @@ function load(){
  }catch(e){entries=[];if(r){try{localStorage.setItem(JKEY+"-corrupt",r)}catch(x){}}else memOnly=true}
  loadTemplate();loadPlans();
 }
-function bump(k){try{usage[k]=(usage[k]||0)+1;usage.days[new Date().toISOString().slice(0,10)]=1;localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){}}
+function bump(k){if(window.__ev)try{window.__ev(k)}catch(e){}try{usage[k]=(usage[k]||0)+1;usage.days[new Date().toISOString().slice(0,10)]=1;localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){}}
 function storeNoteText(inSettings){
  var n=entries.length-(settings.backedUp||0);
  if(memOnly)return "WARNING: this browser refused to save, so entries last only until you close the page. Open Settings and tap Back up to keep a copy.";
@@ -1038,6 +1069,8 @@ function resetPre(){preChecks={};preTouched=false;preMood=[];preMoodAt=null;rend
 
 /* ---- daily guard ---- */
 function dayStart(hour){
+ var z=tzShow();
+ if(z){try{var now=Date.now(),off=zoneOffsetMs(now,z),loc=new Date(now+off),st=Date.UTC(loc.getUTCFullYear(),loc.getUTCMonth(),loc.getUTCDate(),hour,0,0)-off;if(st>now)st-=864e5;return st}catch(e){}}
  var d=new Date(),s=new Date(d.getFullYear(),d.getMonth(),d.getDate(),hour,0,0,0);
  if(s.getTime()>d.getTime())s=new Date(s.getTime()-864e5);
  return s.getTime();
@@ -1323,7 +1356,7 @@ function renderEntry(e){
  if(String(e.id).indexOf("demo-")===0)nm.appendChild(h("span","demotag","DEMO"));
  var dt=new Date(e.createdAt);
  left.appendChild(nm);
- left.appendChild(h("div","when",dt.toLocaleDateString(undefined,{month:"short",day:"numeric"})+", "+dt.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",hour12:false})));
+ left.appendChild(h("div","when",fmtWhen(dt)));
  var del=h("button","link del","Delete");del.setAttribute("aria-label","Delete "+e.instrument+" entry");
  del.onclick=function(){var at=entries.findIndex(function(x){return x.id===e.id});if(at<0)return;entries.splice(at,1);save();render();
   if(window.__toast)window.__toast("Deleted: "+e.instrument+" trade","Undo",function(){if(entries.some(function(x){return x.id===e.id}))return;entries.splice(Math.min(at,entries.length),0,e);save();render()})};
@@ -1423,7 +1456,7 @@ function renderEntry(e){
 
 /* ---- analysis journal: the plan before the trade ---- */
 var PKEY="fx-calc-analysis-v1",PTKEY="fx-calc-plantmpl-v1",PDKEY="fx-calc-plandraft-v1";
-var plans=[],jmode="trade",planShown=10,planOpen={},addingTf=false,ptmpl={items:[]},draft=null;
+var plans=[],jmode="trade",planShown=10,planOpen={},addingTf=false,ptmpl={items:[]},draft=null,editingPlan=null,stashDraft=null;
 var TF_ALL=["W","D","H4","H1","M30","M15","M5"];
 var TF_OPTS={
  D:["Uptrend","Downtrend","Range / Consolidation","Reversal Warning"],
@@ -1452,6 +1485,7 @@ function fixPlan(p){
  o.rating=p.rating==="aplus"||p.rating==="bplus"||p.rating==="none"?p.rating:null;
  if(!o.rating)return null;
  o.note=planText(p.note,2000);o.tz=planText(p.tz,60)||null;
+ var te=typeof p.editedAt==="string"?Date.parse(p.editedAt):NaN;o.editedAt=te>0&&te<4102444800000?new Date(te).toISOString():null;
  return o;
 }
 function newDraft(){return {htf:{},extra:[],checks:{},rating:null,inst:"",note:""}}
@@ -1475,7 +1509,7 @@ function loadPlans(){
 }
 function savePlans(){try{localStorage.setItem(PKEY,JSON.stringify(plans))}catch(e){memOnly=true}}
 function savePtmpl(){try{localStorage.setItem(PTKEY,JSON.stringify(ptmpl))}catch(e){}}
-function saveDraft(){try{localStorage.setItem(PDKEY,JSON.stringify(draft))}catch(e){}}
+function saveDraft(){if(editingPlan)return;try{localStorage.setItem(PDKEY,JSON.stringify(draft))}catch(e){}}
 function planById(id){for(var i=0;i<plans.length;i++)if(plans[i].id===id)return plans[i];return null}
 function activePlanFor(inst){
  var now=Date.now();
@@ -1485,7 +1519,7 @@ function activePlanFor(inst){
 function drawPlanNote(){
  var n=$("planNote"),ap=activePlanFor($("inst").value);
  if(!ap){n.hidden=true;return}
- var tm=new Date(ap.createdAt);tm=pad(tm.getHours())+":"+pad(tm.getMinutes());
+ var tm=fmtClock(new Date(ap.createdAt));
  n.className="plannote"+(ap.rating==="none"?" warn":"");
  n.textContent=ap.rating==="none"?"Your saved plan from "+tm+" says No Trade. Pause before you log this.":"Saved plan from "+tm+": "+RLAB[ap.rating]+".";
  n.hidden=false;
@@ -1501,6 +1535,7 @@ function drawPlanHint(msg,bad){
 function planLabel(l){var i=l.indexOf(" — ");return i>0?[l.slice(0,i),l.slice(i+3)]:[l,""]}
 function drawPlanForm(){
  var f=$("planForm");f.innerHTML="";
+ if(editingPlan){var eb=h("div","editbar","Editing a saved plan. Update plan replaces it and keeps its original time. Your unsaved draft is kept for later.");eb.setAttribute("role","status");f.appendChild(eb)}
  // higher timeframes
  var a=h("div","psec");a.appendChild(h("div","ptitle","Higher timeframe analysis"));
  ["D","H4","H1"].concat(draft.extra).forEach(function(tf){
@@ -1559,29 +1594,60 @@ function drawPlanForm(){
  ta.oninput=function(){draft.note=ta.value;saveDraft()};d.appendChild(ta);
  var hint=h("p","phint");hint.id="planHint";hint.setAttribute("role","status");d.appendChild(hint);
  var br=h("div","btnrow");
- var sv=h("button","btn","Save to Journal");sv.type="button";sv.id="planSave";sv.onclick=savePlan;
- var cl=h("button","btn ghost","Clear");cl.type="button";cl.id="planClear";cl.onclick=function(){draft=newDraft();addingTf=false;saveDraft();drawPlanForm()};
+ var sv=h("button","btn",editingPlan?"Update plan":"Save to Journal");sv.type="button";sv.id="planSave";sv.onclick=savePlan;
+ var cl=h("button","btn ghost",editingPlan?"Cancel edit":"Clear");cl.type="button";cl.id="planClear";cl.onclick=function(){if(editingPlan){stopEdit();drawPlanForm();return}draft=newDraft();addingTf=false;saveDraft();drawPlanForm()};
  br.appendChild(sv);br.appendChild(cl);d.appendChild(br);f.appendChild(d);
  drawPlanHint();
+}
+function exportPlans(){
+ if(!plans.length)return;bump("csv");
+ var head=["id","createdAt","editedAt","instrument","rating","timeframes","ticked","total","not_ticked","note","trades_linked"];
+ var rows=[head.map(function(x){return csvCell(x)}).join(",")];
+ plans.slice().reverse().forEach(function(p){
+  var tk=p.checks.filter(function(c){return c.checked}).length;
+  var un=p.checks.filter(function(c){return !c.checked}).map(function(c){return planLabel(c.label)[0]}).join("; ");
+  var lk=entries.filter(function(e){return e.planId===p.id}).length;
+  var c=[[p.id,1],[p.createdAt,1],[p.editedAt||"",1],[p.instrument||"",1],[RLAB[p.rating],1],[p.htf.map(function(x){return x.tf+": "+x.bias}).join("; "),1],[tk],[p.checks.length],[un,1],[p.note,1],[lk]];
+  rows.push(c.map(function(x){return csvCell(x[0],x[1])}).join(","));
+ });
+ var now=new Date();
+ dlBlob("analysis-journal-"+now.getFullYear()+"-"+pad(now.getMonth()+1)+"-"+pad(now.getDate())+".csv",new Blob(["\ufeff"+rows.join("\r\n")],{type:"text/csv;charset=utf-8"}));
+}
+function stopEdit(){editingPlan=null;draft=stashDraft||newDraft();stashDraft=null;addingTf=false}
+function startEdit(p){
+ if(!editingPlan)stashDraft=draft;
+ var d=newDraft();editingPlan=p.id;
+ p.htf.forEach(function(x){d.htf[x.tf]=x.bias;if(["D","H4","H1"].indexOf(x.tf)<0&&d.extra.indexOf(x.tf)<0)d.extra.push(x.tf)});
+ p.checks.forEach(function(c){if(c.checked)d.checks[c.itemId]=true});
+ d.rating=p.rating;d.inst=p.instrument&&SPEC[p.instrument]?p.instrument:"";d.note=p.note||"";
+ draft=d;addingTf=false;drawPlanForm();
+ var pf=$("planForm");if(pf&&pf.scrollIntoView)pf.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function savePlan(){
  if(!draft.rating){drawPlanHint("Choose a rating first: A+ Setup active, B+ Setup or No Trade.",true);return}
  var htf=["D","H4","H1"].concat(draft.extra).filter(function(tf){return draft.htf[tf]}).map(function(tf){return {tf:tf,bias:draft.htf[tf]}});
- var p=fixPlan({id:Date.now()+"-"+Math.random().toString(36).slice(2,7),createdAt:new Date().toISOString(),instrument:draft.inst||null,htf:htf,
-  checks:ptmpl.items.map(function(i){return {itemId:i.id,label:i.label,checked:!!draft.checks[i.id]}}),rating:draft.rating,note:draft.note.trim(),
-  tz:(function(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return ""}})()});
+ var old=editingPlan?planById(editingPlan):null;
+ if(editingPlan&&!old){stopEdit();drawPlan();return}
+ var ids=ptmpl.items.map(function(i){return i.id});
+ var keep=old?old.checks.filter(function(c){return ids.indexOf(c.itemId)<0}):[];
+ var p=fixPlan({id:old?old.id:Date.now()+"-"+Math.random().toString(36).slice(2,7),createdAt:old?old.createdAt:new Date().toISOString(),editedAt:old?new Date().toISOString():null,instrument:draft.inst||null,htf:htf,
+  checks:ptmpl.items.map(function(i){return {itemId:i.id,label:i.label,checked:!!draft.checks[i.id]}}).concat(keep),rating:draft.rating,note:draft.note.trim(),
+  tz:old?old.tz:(function(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return ""}})()});
  if(!p)return;
+ if(old){plans[plans.indexOf(old)]=p;savePlans();planOpen[p.id]=1;stopEdit();drawPlan();render();drawPlanNote();
+  if(window.__toast)window.__toast("Plan updated: "+RLAB[p.rating],"",null);return}
  plans.unshift(p);savePlans();bump("plan");planOpen[p.id]=1;
  draft=newDraft();addingTf=false;saveDraft();drawPlan();
  if(window.__toast)window.__toast("Plan saved: "+RLAB[p.rating],"",null);
 }
 function drawPlanList(){
  var L=$("planList");L.innerHTML="";
+ if(plans.length){var tl=h("div","tools"),xb=h("button","link","Export plans CSV");xb.type="button";xb.onclick=exportPlans;tl.appendChild(xb);L.appendChild(tl)}
  if(!plans.length){L.appendChild(h("p","empty","No plans yet. Fill in the form above and tap Save to Journal."));return}
  plans.slice(0,planShown).forEach(function(p){
   var card=h("div","entry"),left=h("div"),dt=new Date(p.createdAt);
   left.appendChild(h("div","name",p.instrument||"Any instrument"));
-  left.appendChild(h("div","when",dt.toLocaleDateString(undefined,{month:"short",day:"numeric"})+", "+pad(dt.getHours())+":"+pad(dt.getMinutes())));
+  left.appendChild(h("div","when",fmtWhen(dt)));
   var sm=h("button","esum");sm.type="button";sm.appendChild(left);
   var em=h("div","emeta");em.appendChild(h("div","rtag "+p.rating,RLAB[p.rating]));
   var tk=p.checks.filter(function(c){return c.checked}).length;
@@ -1593,6 +1659,8 @@ function drawPlanList(){
   if(p.note)body.appendChild(h("div","pline",p.note));
   var linked=entries.filter(function(e){return e.planId===p.id}).length;
   body.appendChild(h("div","note",linked?linked+" trade"+(linked===1?"":"s")+" logged under this plan.":"No trades logged under this plan yet."));
+  if(p.editedAt)body.appendChild(h("div","note","Edited "+fmtWhen(new Date(p.editedAt))+"."));
+  var ed=h("button","link","Edit plan");ed.type="button";ed.onclick=function(){startEdit(p)};body.appendChild(ed);
   var del=h("button","link del","Delete plan");del.type="button";
   del.onclick=function(){var at=plans.indexOf(p);if(at<0)return;plans.splice(at,1);savePlans();drawPlan();render();
    if(window.__toast)window.__toast("Deleted a plan","Undo",function(){if(planById(p.id))return;plans.splice(Math.min(at,plans.length),0,p);savePlans();drawPlan();render()})};
@@ -1687,6 +1755,14 @@ function render(){
  if(window.__navRefresh)window.__navRefresh();
 }
 fillSessions($("rSes"),"");
+function drawSesHint(){
+ var hn=$("sesHint"),sg=suggestSession(new Date()),cur=$("rSes").value;
+ hn.innerHTML="";
+ if(!sg||cur){hn.hidden=true;return}
+ hn.hidden=false;hn.appendChild(document.createTextNode("Looks like "+sg+" hours (a guess from the time). "));
+ var b=h("button",null,"Use "+sg);b.type="button";b.onclick=function(){$("rSes").value=sg;hn.hidden=true};hn.appendChild(b);
+}
+$("rSes").addEventListener("change",drawSesHint);
 ["size","pnl","amt","rrr"].forEach(function(k){$("t_"+k).onclick=function(){setTab(k)}});
 $("mPct").onclick=function(){setMode("pct")};
 $("mAmt").onclick=function(){setMode("amt")};
@@ -1699,6 +1775,20 @@ $("q").addEventListener("input",renderSheet);
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("sheet").hidden)closeSheet()});
 $("calc").onclick=calculate;
 $("logBtn").onclick=logTrade;
+function drawTz(){
+ var sel=$("tzSel");if(!sel)return;
+ if(!sel.options.length){
+  var o0=h("option",null,"Device clock (default)");o0.value="";sel.appendChild(o0);
+  var zs=[];try{zs=Intl.supportedValuesOf("timeZone")}catch(e){}
+  if(!zs.length)zs=["UTC","Africa/Lagos","America/Chicago","America/New_York","America/Los_Angeles","Europe/London","Europe/Paris","Asia/Dubai","Asia/Kolkata","Asia/Singapore","Asia/Tokyo","Australia/Sydney"];
+  if(zs.indexOf("UTC")<0)zs.unshift("UTC");
+  zs.forEach(function(z){var o=h("option",null,z.replace(/_/g," "));o.value=z;sel.appendChild(o)});
+  sel.onchange=function(){settings.tzShow=sel.value||"";try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}drawTz();render();if(typeof drawPlan==="function")drawPlan();drawPlanNote()};
+ }
+ sel.value=tzShow()||"";
+ var dev="";try{dev=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}
+ $("tzNote").textContent="Right now: "+fmtClock(new Date())+" "+(tzShow()||dev||"device time")+(tzShow()?" (device clock says "+dev+")":"")+".";
+}
 (function(){var hm=$("hideMoney");hm.onchange=function(){settings.hideMoney=hm.checked;try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}}})();
 $("cardBtn").onclick=function(){if(last)shareCard(cardFromLast(last))};
 $("editCheck").onclick=function(){editingCheck=!editingCheck;renderCheckEditor()};
@@ -1845,7 +1935,68 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   L.push("");L.push("Not included: prices, balances, profit or loss, lot sizes, notes, reasons, names.");
   return L.join("\n");
  }
- function fillSettings(){drawClr();drawBuild();$("testPre").textContent=buildReport()}
+ /* ---- optional anonymous usage sharing (off by default) ---- */
+ function ingestUrl(){var c=window.PIPFRAME_CFG,u=c&&typeof c.ingest==="string"?c.ingest.trim():"";return /^https:\/\/[A-Za-z0-9.-]+(:\d+)?\/[\x21-\x7E]*$/.test(u)||/^http:\/\/localhost:\d+\/[\x21-\x7E]*$/.test(u)?u:""}
+ function shareState(){var o=settings.share;if(!o||typeof o!=="object"||Array.isArray(o))o=settings.share={};o.on=o.on===true;if(typeof o.id!=="string"||!/^[a-z0-9]{16}$/.test(o.id))o.id="";if(typeof o.last!=="string"||!/^\d{4}-\d\d-\d\d$/.test(o.last))o.last="";o.lastAt=clampN(o.lastAt,4102444800000);o.lastSec=clampN(o.lastSec,100000000);return o}
+ function clampN(v,m){v=Number(v);return isFinite(v)&&v>0?Math.min(Math.floor(v),m):0}
+ function saveShare(){try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}}
+ function newShareId(){var a=new Uint8Array(16),o="";try{crypto.getRandomValues(a)}catch(e){for(var i=0;i<16;i++)a[i]=Math.floor(Math.random()*256)}for(var j=0;j<16;j++)o+="0123456789abcdefghijklmnopqrstuvwxyz".charAt(a[j]%36);return o}
+ function cleanName(v){v=String(v||"");return /^[A-Za-z][A-Za-z0-9 ._()-]{0,39}$/.test(v)?v:"Other"}
+ /* active time: counted only while the switch is on, the app is visible and you touched it in the last minute */
+ var ACTKEY="fx-calc-active-v1",act={day:"",sec:0,sessions:0,total:0,lastEnd:0},lastAct=0;
+ try{var ar=JSON.parse(localStorage.getItem(ACTKEY)||"null");if(ar&&typeof ar==="object"){act.day=/^\d{4}-\d\d-\d\d$/.test(ar.day)?ar.day:"";act.sec=clampN(ar.sec,86400);act.sessions=clampN(ar.sessions,500);act.total=clampN(ar.total,100000000);act.lastEnd=clampN(ar.lastEnd,4102444800000)}}catch(e){}
+ function shareOn(){try{return !!ingestUrl()&&shareState().on}catch(e){return false}}
+ function saveAct(){try{if(act.total||act.sessions)localStorage.setItem(ACTKEY,JSON.stringify(act));else localStorage.removeItem(ACTKEY)}catch(e){}}
+ function rollDay(now){var d=new Date(now).toISOString().slice(0,10);if(act.day!==d){act.day=d;act.sec=0;act.sessions=0}}
+ function actTouch(){if(!shareOn())return;var now=Date.now();rollDay(now);if(now-act.lastEnd>1800000){act.sessions=Math.min(act.sessions+1,500);saveAct()}lastAct=now;act.lastEnd=now}
+ function actTick(){if(!shareOn())return;var now=Date.now();rollDay(now);if(document.visibilityState==="visible"&&now-lastAct<=60000){act.sec=Math.min(act.sec+5,86400);act.total=Math.min(act.total+5,100000000);saveAct()}}
+ ["pointerdown","keydown","touchstart","scroll"].forEach(function(n){window.addEventListener(n,actTouch,{passive:true,capture:true})});
+ setInterval(actTick,5000);
+ var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan"],evs=[],devModel="";
+ try{var er=JSON.parse(localStorage.getItem(EVKEY)||"[]");if(Array.isArray(er))evs=er.filter(function(x){return x&&typeof x.t==="number"&&isFinite(x.t)&&EV_OK.indexOf(x.e)>-1}).slice(-300)}catch(e){}
+ function saveEvs(){try{if(evs.length)localStorage.setItem(EVKEY,JSON.stringify(evs));else localStorage.removeItem(EVKEY)}catch(e){}}
+ window.__ev=function(k){var st=shareState();if(!ingestUrl()||!st.on||EV_OK.indexOf(k)<0)return;evs.push({t:Date.now(),e:k});if(evs.length>300)evs=evs.slice(-300);saveEvs()};
+ try{if(navigator.userAgentData&&navigator.userAgentData.getHighEntropyValues)navigator.userAgentData.getHighEntropyValues(["model"]).then(function(hv){var m=String(hv&&hv.model||"");devModel=/^[A-Za-z0-9][A-Za-z0-9 ._()\/+-]{0,39}$/.test(m)?m:"";drawShare()}).catch(function(){})}catch(e){}
+ function usagePayload(){
+  var st=shareState(),real=entries.filter(function(t){return String(t.id).indexOf("demo-")!==0});
+  var inst=false;try{inst=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}catch(e){}
+  var C={};EV_OK.forEach(function(k){var n=Number(usage[k]);C[k]=isFinite(n)&&n>0?Math.min(Math.floor(n),100000):0});
+  var now=new Date(),off=-now.getTimezoneOffset(),q=function(n){return n<10?"0"+n:""+n},ao=Math.abs(off);
+  var local=now.getFullYear()+"-"+q(now.getMonth()+1)+"-"+q(now.getDate())+"T"+q(now.getHours())+":"+q(now.getMinutes())+(off<0?"-":"+")+q(Math.floor(ao/60))+":"+q(ao%60);
+  var central="";try{var o={};new Intl.DateTimeFormat("en-US",{timeZone:"America/Chicago",hourCycle:"h23",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).formatToParts(now).forEach(function(x){o[x.type]=x.value});central=o.year+"-"+o.month+"-"+o.day+" "+o.hour+":"+o.minute+" CT"}catch(e){}
+  var tz="";try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||""}catch(e){}
+  var lang=String(navigator.language||"");
+  return {v:2,id:st.id||"(created when you switch it on)",app:APP_V,day:now.toISOString().slice(0,10),since:(usage.first||"").slice(0,10),days_active:Object.keys(usage.days||{}).length,installed:inst,os:cleanName(osName()),browser:cleanName(browserName()),
+   model:devModel,tz:/^[A-Za-z][A-Za-z0-9_\/+-]{0,39}$/.test(tz)?tz:"",utc_offset_min:off,local_time:local,central_time:central,screen:Math.round(screen.width)+"x"+Math.round(screen.height),lang:/^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})?$/.test(lang)?lang:"",
+   active_sec_today:act.day===now.toISOString().slice(0,10)?act.sec:0,sessions_today:act.day===now.toISOString().slice(0,10)?act.sessions:0,active_sec_total:act.total,trades:real.length,closed:real.filter(isClosed).length,plans:plans.filter(function(x){return String(x.id).indexOf("demo-")!==0}).length,counts:C,
+   events:evs.map(function(x){return new Date(x.t).toISOString().slice(0,19)+"Z "+x.e})};
+ }
+ function shareMsg(t){var n=$("shareNote");if(n)n.textContent=t}
+ function sendShare(){
+  var st=shareState(),url=ingestUrl();if(!url||!st.on)return Promise.resolve();
+  if(!st.id){st.id=newShareId();saveShare()}
+  var sentN=evs.length,body=JSON.stringify(usagePayload()),day=new Date().toISOString().slice(0,10);
+  var opt={method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:body,credentials:"omit",referrerPolicy:"no-referrer"};
+  shareMsg("Sending…");
+  function done(how){st.last=day;st.lastAt=Date.now();st.lastSec=act.total;if(how==="ok"){evs=evs.slice(sentN);saveEvs()}saveShare();shareMsg(how==="ok"?"Sent today. Thank you.":"Sent today, but this device could not confirm it arrived.");drawShare()}
+  var o1={method:opt.method,headers:opt.headers,body:opt.body,credentials:"omit",referrerPolicy:"no-referrer",redirect:"follow"};
+  return fetch(url,o1).then(function(r){if(!r.ok)throw new Error("bad");done("ok")}).catch(function(){
+   return fetch(url,{method:"POST",mode:"no-cors",headers:opt.headers,body:body,credentials:"omit",referrerPolicy:"no-referrer"}).then(function(){done("unconfirmed")})
+  }).catch(function(){shareMsg("Could not send right now. Nothing is lost. It will try again next time you open the app.")});
+ }
+ function drawShare(){
+  var pn=$("sharePanel");if(!pn)return;var url=ingestUrl();pn.hidden=!url;$("aboutShare").hidden=!url;if(!url)return;
+  var st=shareState();$("shareOn").checked=st.on;$("shareNow").disabled=!st.on;
+  $("sharePre").textContent=JSON.stringify(usagePayload(),null,1);
+ }
+ $("shareOn").onchange=function(){var st=shareState();st.on=$("shareOn").checked;if(st.on&&!st.id)st.id=newShareId();if(st.on){lastAct=Date.now();act.lastEnd=lastAct;act.day=new Date().toISOString().slice(0,10);act.sessions=1;saveAct()}saveShare();drawShare();
+  if(st.on){sendShare()}else{evs=[];saveEvs();act={day:"",sec:0,sessions:0,total:0,lastEnd:0};saveAct();shareMsg("Sharing is off. Nothing more will be sent, and the saved activity list was deleted from this device.")}};
+ $("shareNow").onclick=function(){sendShare()};
+ function maybeSend(){try{var st=shareState();if(!ingestUrl()||!st.on||navigator.onLine===false)return;
+  var newDay=st.last!==new Date().toISOString().slice(0,10),more=Date.now()-st.lastAt>=10800000&&act.total-st.lastSec>=60;if(newDay||more)sendShare()}catch(e){}}
+ setTimeout(maybeSend,3000);
+ document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")maybeSend()});
+ function fillSettings(){drawClr();drawBuild();drawTz();drawShare();$("testPre").textContent=buildReport()}
  ["fbDis","fbTxt"].forEach(function(id){$(id).addEventListener("input",function(){usage.fb=usage.fb||{};usage.fb[id]=$(id).value;try{localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){};$("testPre").textContent=buildReport()})});
  if(usage.fb){if(usage.fb.fbDis)$("fbDis").value=usage.fb.fbDis;if(usage.fb.fbTxt)$("fbTxt").value=usage.fb.fbTxt}
  $("shareRep").onclick=function(){

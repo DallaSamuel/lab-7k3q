@@ -12,3 +12,10 @@ Test files in this folder (all made up):
 Run the importer tests:  node --test
 
 If you edit index.html: run  python seal.py index.html  afterwards (it updates the security policy hashes), then  node --test  to confirm.
+
+OPTIONAL: anonymous usage sharing (v15)
+  Off in this build: the app never contacts any server.
+  To switch the feature on for a pilot, follow server/README.md (about 10 minutes), then run:
+    python3 wire-analytics.py <your Web app URL>
+    python3 seal.py index.html
+  Testers still have to switch it on themselves in Settings, Help improve PipFrame.

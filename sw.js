@@ -1,5 +1,5 @@
-const CACHE = "lot-calc-v6-proto";
-const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./icon-192.png", "./icon-512.png", "./fonts/poppins-400.woff", "./fonts/poppins-500.woff", "./fonts/poppins-700.woff"];
+const CACHE = "lot-calc-v9-proto";
+const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg", "./config.js", "./icon-192.png", "./icon-512.png", "./fonts/poppins-400.woff", "./fonts/poppins-500.woff", "./fonts/poppins-700.woff"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
   self.skipWaiting();
