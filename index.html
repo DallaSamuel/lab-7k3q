@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-98B5Q0WzNRtkYCk9DhTsYZTePvmAzalW2lCxJ14dIKw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-tn/NbzBGdWwkBzWJL3aapq6KjPpwy1F6zg/Q1jlX9Pw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -48,6 +48,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);bo
 .seg button{min-height:42px;border:0;border-radius:9px;background:transparent;color:var(--mute);font:inherit;font-weight:600;cursor:pointer}
 .seg button[aria-pressed="true"]{background:linear-gradient(180deg,#f7e08a,#D4AF37 55%,#b58f24);color:#121212;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
 button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.fbh{font:600 1rem/1.3 "Playfair Display",Georgia,serif;color:#fff;margin:22px 0 6px}
 .hint{font-size:.75rem;color:var(--mute);margin-top:5px}
 .btn{width:100%;min-height:52px;border:0;border-radius:12px;background:linear-gradient(180deg,#f7e08a 0%,#D4AF37 48%,#b58f24 100%);color:#121212;font:inherit;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 6px 16px rgba(212,175,55,.25)}
 .btn:active{filter:brightness(.92)}
@@ -219,6 +220,31 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .plannote{font-size:.82rem;font-weight:600;color:#2b2308;margin:0 0 10px}.plannote.warn{color:#7a1f12;border-left:3px solid #7a1f12;padding-left:8px}
 .rtag{font-weight:700}.rtag.aplus{color:#f7e08a}.rtag.none{color:#ff8a7a}
 .pline{margin:2px 0;font-size:.88rem}
+
+/* Look: Black and champagne (v19) */
+html[data-look="champagne"]{--gold:#E6D3A8;--text:#f2ede3;--mute:#a39c8d;background:#000}
+html[data-look="champagne"] body{background:#000}
+html[data-look="champagne"] h1{background:linear-gradient(180deg,#F7E7CE,#E6D3A8 60%,#C9B07C);-webkit-background-clip:text;background-clip:text}
+html[data-look="champagne"] .tabs{background:#000;border-color:rgba(230,211,168,.3);box-shadow:none}
+html[data-look="champagne"] .panel,html[data-look="champagne"] .entry{background:#0b0b0c;border:1px solid rgba(230,211,168,.16);box-shadow:none}
+html[data-look="champagne"] input,html[data-look="champagne"] select,html[data-look="champagne"] textarea{background-color:#101011;background-image:none;border-color:rgba(230,211,168,.18);box-shadow:none}
+html[data-look="champagne"] select{background-image:linear-gradient(45deg,transparent 50%,#E6D3A8 50%),linear-gradient(135deg,#E6D3A8 50%,transparent 50%)}
+html[data-look="champagne"] input:focus,html[data-look="champagne"] select:focus,html[data-look="champagne"] textarea:focus{border-color:#E6D3A8;box-shadow:0 0 0 3px rgba(230,211,168,.2)}
+html[data-look="champagne"] .seg{background:#000;border-color:rgba(230,211,168,.2);box-shadow:none}
+html[data-look="champagne"] .tabs button[aria-selected="true"],html[data-look="champagne"] .seg button[aria-pressed="true"],html[data-look="champagne"] .chip[aria-pressed="true"],html[data-look="champagne"] .rbtn[aria-pressed="true"]{background:#E6D3A8;border-color:#E6D3A8;color:#0a0a0a;box-shadow:none}
+html[data-look="champagne"] .rbtn[aria-pressed="true"][data-r="none"]{background:#3a3a3c;color:#fff;border-color:#8a8a8d}
+html[data-look="champagne"] .chip,html[data-look="champagne"] .rbtn{background:#0b0b0c;border-color:rgba(230,211,168,.22)}
+html[data-look="champagne"] .btn{background:#E6D3A8;color:#0a0a0a;box-shadow:none}
+html[data-look="champagne"] .logbtn{background:#000;color:#E6D3A8;border:1.5px solid rgba(230,211,168,.6)}
+html[data-look="champagne"] .btn.ghost{background:transparent;color:#E6D3A8;border:1.5px solid rgba(230,211,168,.55)}
+html[data-look="champagne"] .result{background:#E6D3A8;box-shadow:none}
+html[data-look="champagne"] .result .btn.ghost{color:#0a0a0a;border-color:rgba(0,0,0,.45)}
+html[data-look="champagne"] .result .btn{background:#0a0a0a;color:#E6D3A8}
+html[data-look="champagne"] .meter i{background:#E6D3A8}
+html[data-look="champagne"] select optgroup{color:#E6D3A8}
+html[data-look="champagne"] .bnav{background:rgba(0,0,0,.9);border-color:rgba(230,211,168,.3)}
+html[data-look="champagne"] .bnav button[aria-current="page"]{background:rgba(230,211,168,.1)}
+html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:none}
 </style>
 </head>
 <body>
@@ -328,6 +354,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <p class="sesHint" id="sesHint" hidden></p>
 <label for="rReason">Reason for trade (optional)</label>
 <input id="rReason" type="text" placeholder="e.g. Break and retest of resistance">
+<p class="plannote warn" id="tiltNote" hidden></p>
 <button class="btn logbtn" id="logBtn" type="button">Log this trade</button>
 <button class="btn ghost" id="cardBtn" type="button">Share trade card</button>
 <label class="chk" for="hideMoney"><input type="checkbox" id="hideMoney"> Hide dollar amounts and lot size on shared cards</label>
@@ -380,6 +407,9 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <p class="note">Put it on your home screen or desktop and it opens like an app, offline too.</p>
 <div class="installrow"><button class="btn" id="installBtn" type="button">Install app</button><p class="installhelp" id="installHelp" hidden></p></div>
 </section>
+<section class="panel" aria-label="Look"><div class="head"><h2>Look</h2></div>
+<p class="note">Pick the colours you like. Your trades are not touched.</p>
+<label for="lookSel">Colours</label><select id="lookSel"><option value="classic">Black and gold (original)</option><option value="champagne">Black and champagne</option></select></section>
 <section class="panel" aria-label="Time"><div class="head"><h2>Time</h2></div>
 <p class="note">Times in your journal follow this setting. Your device clock is not changed, and your saved trades are not touched.</p>
 <label for="tzSel">Times shown in</label><select id="tzSel"></select>
@@ -397,13 +427,19 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 <p class="note">This is exactly what would be sent:</p>
 <div class="testpre" id="sharePre" aria-label="What would be sent"></div>
 <div class="btnrow"><button class="btn ghost" id="shareNow" type="button">Send now</button></div>
-<p class="note" id="shareNote" role="status"></p></section>
-<section class="panel" aria-label="Help us test"><div class="head"><h2>Help us test</h2></div>
+<p class="note" id="shareNote" role="status"></p>
+<div id="fbSlot" hidden><h3 class="fbh">Tell us what you think</h3>
+<p class="note">Optional. Sent only when you tap Send feedback, and only what you see below. Do not write anything you want kept private.</p>
+<div id="fbMount"></div>
+<div class="testpre" id="fbPre" aria-label="What would be sent as feedback"></div>
+<div class="btnrow"><button class="btn" id="fbSend" type="button">Send feedback</button></div>
+<p class="note" id="fbNote" role="status"></p></div></section>
+<section class="panel" id="testPanel" aria-label="Help us test"><div class="head"><h2>Help us test</h2></div>
 <p class="note">Nothing is sent automatically. This makes a short report of how you used the app. Read it, add your thoughts, and send it to whoever gave you the app.</p>
-<label for="fbDis">How would you feel if this app disappeared tomorrow?</label>
+<div id="fbWrap"><label for="fbDis">How would you feel if this app disappeared tomorrow?</label>
 <select id="fbDis"><option value="">Choose one</option><option>Very disappointed</option><option>Somewhat disappointed</option><option>Not disappointed</option></select>
 <label for="fbTxt" style="margin-top:10px">What was confusing, missing, or great?</label>
-<textarea id="fbTxt" rows="3" placeholder="Write anything, even one line"></textarea>
+<textarea id="fbTxt" rows="3" maxlength="1000" placeholder="Write anything, even one line"></textarea></div>
 <div class="testpre" id="testPre" aria-label="Your test report"></div>
 <button class="btn" id="shareRep" type="button">Share test report</button>
 <p class="note" id="repNote"></p>
@@ -561,7 +597,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v17";
+var APP_V="v21";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -825,6 +861,7 @@ function calcSize(){
  }
  show({title:"Position size",big:n(lots,2),sub:"standard lots (rounded down to 0.01)",rows:rows,note:note,loggable:true});
  last={inst:b.inst,side:side,lots:lots,risk:actual,target:target,sl:sl,tp:tp,rr:rr,profit:profit,entry:en,slPrice:slP,tpPrice:hasTp?tpP:null,pv:pv,bal:(bal>0?bal:null)};
+ drawTilt();
  guardLine(lots,sl,pv);
 }
 function calcPnl(){
@@ -1003,6 +1040,13 @@ function saveSettings(){
  settings.gLimit=$("gLimit").value;settings.gHour=$("gHour").value;
  try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}
 }
+function applyLook(){
+ var v=settings&&settings.look==="champagne"?"champagne":"classic";
+ if(v==="champagne")document.documentElement.setAttribute("data-look","champagne");else document.documentElement.removeAttribute("data-look");
+ var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#000000");
+ var ls=$("lookSel");if(ls)ls.value=v;
+}
+(function(){var ls=$("lookSel");if(ls)ls.onchange=function(){settings.look=ls.value==="champagne"?"champagne":"classic";saveSettings();applyLook()}})();
 function applySettings(){
  var st=JSON.parse(JSON.stringify(settings));   // copy: setMode() saves as it goes
  if(st.inst&&SPEC[st.inst]){$("inst").value=st.inst;updateBtn();instChanged()}
@@ -1012,7 +1056,7 @@ function applySettings(){
  if(st.risk)$("risk").value=st.risk;
  if(st.gLimit)$("gLimit").value=st.gLimit;
  if(st.gHour)$("gHour").value=st.gHour;
- settings=st;saveSettings();
+ settings=st;saveSettings();applyLook();
 }
 
 /* ---- pre-trade checklist and mood (shown before "Log this trade") ---- */
@@ -1706,6 +1750,23 @@ function tiltList(list){
  });
  return out;
 }
+function tiltNow(list,lots,now){
+ var real=list.filter(function(t){return String(t.id).indexOf("demo-")!==0}),msg=[];
+ var cl=real.filter(function(p){return isClosed(p)&&p.result.closedAt}).sort(function(a,b){return Date.parse(b.result.closedAt)-Date.parse(a.result.closedAt)});
+ var lastC=cl[0];
+ if(lastC&&lastC.result.pnl<0){
+  var ago=Math.round((now-Date.parse(lastC.result.closedAt))/60000);
+  if(ago>=0&&ago<=TILT_MIN)msg.push("Your last trade closed at a loss "+(ago<1?"less than a minute":ago+" minute"+(ago===1?"":"s"))+" ago. A short pause before the next one can help.");
+ }
+ var w=real.slice().sort(function(a,b){return Date.parse(b.createdAt)-Date.parse(a.createdAt)}).slice(0,TILT_WIN);
+ if(w.length>=3&&lots>TILT_X*(sum(w.map(function(p){return p.lots}))/w.length))msg.push("This size is more than "+TILT_X+" times your recent average. Check it is a choice, not a reaction.");
+ return msg;
+}
+function drawTilt(){
+ var n=$("tiltNote");if(!n)return;
+ var m=last&&isFinite(last.lots)?tiltNow(entries,last.lots,Date.now()):[];
+ n.textContent=m.join(" ");n.hidden=!m.length;
+}
 function renderReview(){
  var box=$("reviewBody");if(!box)return;box.innerHTML="";
  var closed=entries.filter(isClosed);
@@ -1734,6 +1795,19 @@ function renderReview(){
  var tl=tiltList(entries),wk=Date.now()-7*864e5;
  var wkAll=entries.filter(function(t){return Date.parse(t.createdAt)>=wk}),wkRb=wkAll.filter(function(t){return isClosed(t)&&t.flags.indexOf("brokeRule")>-1});
  section("Discipline",[["Trades where you broke a rule",rb.length+(rb.length?" ("+money(sum(rb.map(function(t){return t.result.pnl}))+0)+")":"")],["Trades after a No Trade plan",String(closed.filter(function(t){var p=t.planId&&planById(t.planId);return p&&p.rating==="none"}).length)],["Possible tilt trades",tl.length+" (within "+TILT_MIN+" min of a loss, or over "+TILT_X+"x your recent size)"]]);
+ (function(){
+  var real=closed.filter(function(t){return String(t.id).indexOf("demo-")!==0}),w=real.filter(function(t){return t.result.pnl>0}),l=real.filter(function(t){return t.result.pnl<0});
+  if(real.length<MIN_PCT){section("Kelly fraction (a sizing check)",[["Needs "+MIN_PCT+" closed trades",real.length+" so far"]]);return}
+  if(!w.length||!l.length){section("Kelly fraction (a sizing check)",[["Needs at least one win and one loss","not enough yet"]]);return}
+  var W=w.length/(w.length+l.length),aw=sum(w.map(function(t){return t.result.pnl}))/w.length,al=-sum(l.map(function(t){return t.result.pnl}))/l.length,R=aw/al,K=W-(1-W)/R;
+  var rk=real.map(function(t){return typeof t.riskPct==="number"?t.riskPct:(t.riskAmount>0&&t.balanceAtEntry>0?t.riskAmount/t.balanceAtEntry*100:null)}).filter(function(x){return x!=null&&isFinite(x)});
+  var rows=[["Win rate",Math.round(W*100)+"% of "+(w.length+l.length)],["Average win / average loss",R.toFixed(2)]];
+  if(K<=0)rows.push(["Kelly says","no edge at your past results, so risk nothing"]);
+  else{var f=Math.min(K,1)*100;rows.push(["Full Kelly",f.toFixed(1)+"% of balance per trade (do not use this)"],["Half Kelly",(f/2).toFixed(1)+"%"],["Quarter Kelly",(f/4).toFixed(1)+"%"])}
+  if(rk.length)rows.push(["Your average risk",(sum(rk)/rk.length).toFixed(2)+"% per trade"]);
+  section("Kelly fraction (a sizing check)",rows);
+  box.appendChild(h("p","note","Kelly assumes your past results repeat. With few trades it swings a lot, and full Kelly is very aggressive, so people who use it usually take a quarter to a half. A number to think about, not advice."));
+ })();
  section("Last 7 days",[["Trades taken",String(wkAll.length)],["Rule breaks",wkRb.length+(wkRb.length?" ("+money(sum(wkRb.map(function(t){return t.result.pnl})))+")":"")]]);
  box.appendChild(h("p","note","Describes what happened in your own trades. It is not advice and does not predict anything."));
 }
@@ -1978,9 +2052,9 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   var sentN=evs.length,body=JSON.stringify(usagePayload()),day=new Date().toISOString().slice(0,10);
   var opt={method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:body,credentials:"omit",referrerPolicy:"no-referrer"};
   shareMsg("Sending…");
-  function done(how){st.last=day;st.lastAt=Date.now();st.lastSec=act.total;if(how==="ok"){evs=evs.slice(sentN);saveEvs()}saveShare();shareMsg(how==="ok"?"Sent today. Thank you.":"Sent today, but this device could not confirm it arrived.");drawShare()}
+  function done(how,said){st.last=day;st.lastAt=Date.now();st.lastSec=act.total;if(how==="ok"){evs=evs.slice(sentN);saveEvs()}saveShare();shareMsg(how==="ok"?"Sent today. Thank you.":how==="refused"?"The server answered \""+said+"\" and did not save it. Tell whoever gave you the app.":"Sent today, but this device could not confirm it arrived.");drawShare()}
   var o1={method:opt.method,headers:opt.headers,body:opt.body,credentials:"omit",referrerPolicy:"no-referrer",redirect:"follow"};
-  return fetch(url,o1).then(function(r){if(!r.ok)throw new Error("bad");done("ok")}).catch(function(){
+  return fetch(url,o1).then(function(r){if(!r.ok)throw new Error("bad");return r.text().then(function(t){t=String(t||"").replace(/[^A-Za-z0-9 ]/g,"").slice(0,20);if(t==="ok")done("ok");else done("refused",t||"nothing")},function(){done("unconfirmed")})}).catch(function(){
    return fetch(url,{method:"POST",mode:"no-cors",headers:opt.headers,body:body,credentials:"omit",referrerPolicy:"no-referrer"}).then(function(){done("unconfirmed")})
   }).catch(function(){shareMsg("Could not send right now. Nothing is lost. It will try again next time you open the app.")});
  }
@@ -1996,7 +2070,24 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   var newDay=st.last!==new Date().toISOString().slice(0,10),more=Date.now()-st.lastAt>=10800000&&act.total-st.lastSec>=60;if(newDay||more)sendShare()}catch(e){}}
  setTimeout(maybeSend,3000);
  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")maybeSend()});
- function fillSettings(){drawClr();drawBuild();drawTz();drawShare();$("testPre").textContent=buildReport()}
+
+ /* ---- feedback goes to the same place as usage sharing (only when the tester taps Send) ---- */
+ function fbPayload(){var st=shareState(),d=$("fbDis").value,t=$("fbTxt").value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").trim().slice(0,1000);
+  if(["Very disappointed","Somewhat disappointed","Not disappointed"].indexOf(d)<0)d="";
+  return {v:2,type:"feedback",id:st.id||"(a random id is made when you send)",app:APP_V,day:new Date().toISOString().slice(0,10),disappointed:d,text:t}}
+ function fbDraw(){var b=$("fbPre");if(b)b.textContent=JSON.stringify(fbPayload(),null,1);var s=$("fbSend");if(s){var p=fbPayload();s.disabled=!(p.disappointed||p.text)}}
+ function fbMsg(t){var n=$("fbNote");if(n)n.textContent=t}
+ function mountFeedback(){if(!ingestUrl()||$("fbSlot").dataset.on)return;$("fbSlot").dataset.on="1";$("fbMount").appendChild($("fbWrap"));$("fbSlot").hidden=false;$("testPanel").hidden=true;fbDraw()}
+ ["fbDis","fbTxt"].forEach(function(id){$(id).addEventListener("input",fbDraw)});
+ $("fbSend").onclick=function(){
+  var url=ingestUrl();if(!url)return;var st=shareState();if(!st.id){st.id=newShareId();saveShare()}
+  var pl=fbPayload();if(!pl.disappointed&&!pl.text)return;
+  fbMsg("Sending…");$("fbSend").disabled=true;
+  function fin(good,said){if(good){$("fbDis").value="";$("fbTxt").value="";usage.fb={};try{localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){}$("testPre").textContent=buildReport();fbMsg("Thank you. Your feedback was sent.")}else fbMsg(said)
+   fbDraw()}
+  fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(pl),credentials:"omit",referrerPolicy:"no-referrer",redirect:"follow"}).then(function(r){if(!r.ok)throw new Error("bad");return r.text().then(function(t){t=String(t||"").replace(/[^A-Za-z0-9 ]/g,"").slice(0,20);if(t==="ok")fin(true);else fin(false,"The server answered \""+(t||"nothing")+"\" and did not save it. Your text is still here. Tell whoever gave you the app.")},function(){fin(false,"Sent, but this device could not confirm it arrived. Your text is still here.")})}).catch(function(){fin(false,"Could not send right now. Your text is still here. Try again when you are online.")});
+ };
+ function fillSettings(){drawClr();drawBuild();drawTz();drawShare();mountFeedback();fbDraw();$("testPre").textContent=buildReport()}
  ["fbDis","fbTxt"].forEach(function(id){$(id).addEventListener("input",function(){usage.fb=usage.fb||{};usage.fb[id]=$(id).value;try{localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){};$("testPre").textContent=buildReport()})});
  if(usage.fb){if(usage.fb.fbDis)$("fbDis").value=usage.fb.fbDis;if(usage.fb.fbTxt)$("fbTxt").value=usage.fb.fbTxt}
  $("shareRep").onclick=function(){
