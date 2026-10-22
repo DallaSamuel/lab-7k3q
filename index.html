@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-tn/NbzBGdWwkBzWJL3aapq6KjPpwy1F6zg/Q1jlX9Pw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-wl2zh7xn9VUInjW8+S+HXmzCPS0Q0wM9YjlorHv0VGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -252,6 +252,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <div class="scr" id="scr_calc">
 <div class="brand"><svg class="logo" viewBox="0 0 512 512" width="52" height="52" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7e08a"/><stop offset=".55" stop-color="#D4AF37"/><stop offset="1" stop-color="#a88220"/></linearGradient></defs><g fill="none" stroke="url(#lg)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"><path d="M112 190V112h78M322 112h78v78M400 322v78h-78M190 400h-78v-78"/></g><g fill="url(#lg)" stroke="url(#lg)" stroke-width="12" stroke-linecap="round"><path d="M196 226v92M256 196v128M316 168v108"/><rect x="180" y="248" width="32" height="48" rx="4" stroke="none"/><rect x="240" y="222" width="32" height="74" rx="4" stroke="none"/><rect x="300" y="188" width="32" height="64" rx="4" stroke="none"/></g></svg><div><div class="eyebrow" id="brandName">PIPFRAME</div><h1>Trade Calculator</h1></div></div>
 <p class="sub">Size it, target it, measure it, then journal it.</p>
+<div class="welcome" id="pilot" role="region" aria-label="Join the test" hidden><h2>Help test PipFrame</h2><p class="wtxt">If you say yes, the app quietly shares how you use it, so the people building it can see what works and what confuses you. No sign-up and it works in the background.</p><p class="wtxt"><b>Shared:</b> your phone type and time zone, when and how long you use it, which buttons you press, the mistakes the app catches (like a stop loss on the wrong side), and how many trades you win, lose and grade.<br><b>Never shared:</b> prices, balances, profit or loss amounts, lot sizes, notes, reasons, names, your location or your internet address.</p><p class="wtxt">You can switch it off any time in Settings, and that deletes what was waiting to be sent.</p><div class="btnrow"><button class="btn" id="pilotYes" type="button">Yes, join the test</button><button class="btn ghost" id="pilotNo" type="button">No thanks</button></div></div>
 <div class="welcome" id="welcome" hidden><h2>Welcome</h2><p class="wtxt">Size a trade, check your setup, log it, and see how you really trade. A one-minute tour shows where everything is.</p><div class="btnrow"><button class="btn" id="tourGo" type="button">Take the tour</button><button class="btn ghost" id="welcomeOk" type="button">Skip</button></div></div>
 
 <div class="tabs" id="tabs" role="tablist" aria-label="Calculator type">
@@ -426,7 +427,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <label class="chk" for="shareOn"><input type="checkbox" id="shareOn"> Send anonymous usage counts</label>
 <p class="note">This is exactly what would be sent:</p>
 <div class="testpre" id="sharePre" aria-label="What would be sent"></div>
-<div class="btnrow"><button class="btn ghost" id="shareNow" type="button">Send now</button></div>
+<p class="note"><button class="linkdark" id="shareNow" type="button" style="color:var(--gold)">Send now (you never need to)</button></p>
 <p class="note" id="shareNote" role="status"></p>
 <div id="fbSlot" hidden><h3 class="fbh">Tell us what you think</h3>
 <p class="note">Optional. Sent only when you tap Send feedback, and only what you see below. Do not write anything you want kept private.</p>
@@ -597,7 +598,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v21";
+var APP_V="v22";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -819,7 +820,7 @@ function base(){
  var ct=parseFloat($("contract").value);if(!(ct>0))ct=s.contract;
  return {inst:inst,s:s,ct:ct,rate:parseFloat($("rate").value)};
 }
-function fail(m){$("err").textContent=m;invalidate()}
+function fail(m){$("err").textContent=m;invalidate();bump(/^Enter |must be above 0|Lot size must|Custom ratio/.test(m)?"e_miss":/take profit must be|can't be the same|For a /.test(m)?"e_side":"e_other")}
 function rateMsg(s){return "Enter the current "+CONV[s.quote][0]+" price so dollar amounts can be worked out."}
 
 function calcSize(){
@@ -1249,7 +1250,7 @@ function logTrade(){
   flags:[],result:{outcome:"open"},notes:""};
  try{e.tz=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(x){}
  var ap=activePlanFor(l.inst);e.planId=ap?ap.id:null;
- entries.unshift(e);bump("log");openIds[e.id]=1;save();render();
+ entries.unshift(e);bump("log");if(e.setup.grade!=="ungraded")bump("graded");if(e.mood.before.length)bump("mood");openIds[e.id]=1;save();render();
  if(window.__toast)window.__toast("Logged: "+e.instrument+" "+(e.direction||"").toUpperCase()+" "+n(e.lots,2)+" lots","Open journal",function(){window.__go("journal")});
  var lb=$("logBtn");lb.disabled=true;lb.textContent="Logged ✓";
  $("rReason").value="";resetPre();
@@ -1358,7 +1359,7 @@ function flagRow(e){
  var chips=h("div","chips");
  FLAGS.forEach(function(f){
   var c=h("button","chip",f[1]);c.type="button";c.setAttribute("aria-pressed",e.flags.indexOf(f[0])>-1);
-  c.onclick=function(){var i=e.flags.indexOf(f[0]);if(i>-1)e.flags.splice(i,1);else e.flags.push(f[0]);save();c.setAttribute("aria-pressed",e.flags.indexOf(f[0])>-1);renderReview()};
+  c.onclick=function(){var i=e.flags.indexOf(f[0]);if(i>-1)e.flags.splice(i,1);else{e.flags.push(f[0]);bump("brk")}save();c.setAttribute("aria-pressed",e.flags.indexOf(f[0])>-1);renderReview()};
   chips.appendChild(c);
  });
  return chips;
@@ -1455,7 +1456,7 @@ function renderEntry(e){
   var v=parseFloat(xi.value);
   if(!(isFinite(v)&&v>0)){e.result={outcome:"open"}}
   else{
-   bump("exit");var p=pnlOf(e,v);
+   bump("exit");var p=pnlOf(e,v),wasOpen=!e.result||!e.result.outcome||e.result.outcome==="open";if(wasOpen&&typeof p==="number"){if(p>0)bump("win");else if(p<0)bump("loss")}
    e.result={outcome:p==null?"manual":classify(e,p,v),exitPrice:v,pnl:p,actualR:p!=null&&e.riskAmount>0?p/e.riskAmount:null,closedAt:(e.result&&e.result.closedAt)||new Date().toISOString()};
   }
   save();render();
@@ -1765,7 +1766,7 @@ function tiltNow(list,lots,now){
 function drawTilt(){
  var n=$("tiltNote");if(!n)return;
  var m=last&&isFinite(last.lots)?tiltNow(entries,last.lots,Date.now()):[];
- n.textContent=m.join(" ");n.hidden=!m.length;
+ n.textContent=m.join(" ");n.hidden=!m.length;if(m.length)bump("tilt");
 }
 function renderReview(){
  var box=$("reviewBody");if(!box)return;box.innerHTML="";
@@ -2011,7 +2012,7 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
  }
  /* ---- optional anonymous usage sharing (off by default) ---- */
  function ingestUrl(){var c=window.PIPFRAME_CFG,u=c&&typeof c.ingest==="string"?c.ingest.trim():"";return /^https:\/\/[A-Za-z0-9.-]+(:\d+)?\/[\x21-\x7E]*$/.test(u)||/^http:\/\/localhost:\d+\/[\x21-\x7E]*$/.test(u)?u:""}
- function shareState(){var o=settings.share;if(!o||typeof o!=="object"||Array.isArray(o))o=settings.share={};o.on=o.on===true;if(typeof o.id!=="string"||!/^[a-z0-9]{16}$/.test(o.id))o.id="";if(typeof o.last!=="string"||!/^\d{4}-\d\d-\d\d$/.test(o.last))o.last="";o.lastAt=clampN(o.lastAt,4102444800000);o.lastSec=clampN(o.lastSec,100000000);return o}
+ function shareState(){var o=settings.share;if(!o||typeof o!=="object"||Array.isArray(o))o=settings.share={};o.on=o.on===true;o.asked=o.asked===true;if(typeof o.id!=="string"||!/^[a-z0-9]{16}$/.test(o.id))o.id="";if(typeof o.last!=="string"||!/^\d{4}-\d\d-\d\d$/.test(o.last))o.last="";o.lastAt=clampN(o.lastAt,4102444800000);o.lastSec=clampN(o.lastSec,100000000);return o}
  function clampN(v,m){v=Number(v);return isFinite(v)&&v>0?Math.min(Math.floor(v),m):0}
  function saveShare(){try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}}
  function newShareId(){var a=new Uint8Array(16),o="";try{crypto.getRandomValues(a)}catch(e){for(var i=0;i<16;i++)a[i]=Math.floor(Math.random()*256)}for(var j=0;j<16;j++)o+="0123456789abcdefghijklmnopqrstuvwxyz".charAt(a[j]%36);return o}
@@ -2022,14 +2023,21 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
  function shareOn(){try{return !!ingestUrl()&&shareState().on}catch(e){return false}}
  function saveAct(){try{if(act.total||act.sessions)localStorage.setItem(ACTKEY,JSON.stringify(act));else localStorage.removeItem(ACTKEY)}catch(e){}}
  function rollDay(now){var d=new Date(now).toISOString().slice(0,10);if(act.day!==d){act.day=d;act.sec=0;act.sessions=0}}
- function actTouch(){if(!shareOn())return;var now=Date.now();rollDay(now);if(now-act.lastEnd>1800000){act.sessions=Math.min(act.sessions+1,500);saveAct()}lastAct=now;act.lastEnd=now}
- function actTick(){if(!shareOn())return;var now=Date.now();rollDay(now);if(document.visibilityState==="visible"&&now-lastAct<=60000){act.sec=Math.min(act.sec+5,86400);act.total=Math.min(act.total+5,100000000);saveAct()}}
+ function actTouch(){if(!shareOn())return;var now=Date.now();rollDay(now);if(now-act.lastEnd>1800000||!curSess()){if(now-act.lastEnd>1800000)act.sessions=Math.min(act.sessions+1,500);saveAct();newSess(now)}lastAct=now;act.lastEnd=now}
+ function actTick(){if(!shareOn())return;var now=Date.now();rollDay(now);if(document.visibilityState==="visible"&&now-lastAct<=60000){act.sec=Math.min(act.sec+5,86400);act.total=Math.min(act.total+5,100000000);saveAct();var cs=curSess();if(cs){cs.sec=Math.min(cs.sec+5,86400);cs.sent=false;saveSess()}}}
  ["pointerdown","keydown","touchstart","scroll"].forEach(function(n){window.addEventListener(n,actTouch,{passive:true,capture:true})});
  setInterval(actTick,5000);
- var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan"],evs=[],devModel="";
+ var SESSKEY="fx-calc-sess-v1",sess=[];
+ function sigOf(x){var t=0;for(var k in x.c)t+=x.c[k];return x.sec+":"+t}
+ function saveSess(){try{if(sess.length)localStorage.setItem(SESSKEY,JSON.stringify(sess));else localStorage.removeItem(SESSKEY)}catch(e){}}
+ function curSess(){return sess.length?sess[sess.length-1]:null}
+ function newSess(now){sess.push({s:new Date(now).toISOString().slice(0,19)+"Z",sec:0,c:{},sent:false});if(sess.length>20)sess=sess.slice(-20);saveSess()}
+ function dirtySess(){return sess.filter(function(x){return !x.sent&&(x.sec>0||Object.keys(x.c).length>0)})}
+ var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan","e_miss","e_side","e_other","tilt","brk","win","loss","graded","mood"],evs=[],devModel="";
  try{var er=JSON.parse(localStorage.getItem(EVKEY)||"[]");if(Array.isArray(er))evs=er.filter(function(x){return x&&typeof x.t==="number"&&isFinite(x.t)&&EV_OK.indexOf(x.e)>-1}).slice(-300)}catch(e){}
+ try{var sr=JSON.parse(localStorage.getItem(SESSKEY)||"[]");if(Array.isArray(sr))sess=sr.filter(function(x){return x&&typeof x==="object"&&typeof x.s==="string"&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x.s)&&x.c&&typeof x.c==="object"}).slice(-20).map(function(x){var c={};EV_OK.forEach(function(k){var n=Number(x.c[k]);if(isFinite(n)&&n>0)c[k]=Math.min(Math.floor(n),10000)});return {s:x.s,sec:clampN(x.sec,86400),c:c,sent:x.sent===true}})}catch(e){}
  function saveEvs(){try{if(evs.length)localStorage.setItem(EVKEY,JSON.stringify(evs));else localStorage.removeItem(EVKEY)}catch(e){}}
- window.__ev=function(k){var st=shareState();if(!ingestUrl()||!st.on||EV_OK.indexOf(k)<0)return;evs.push({t:Date.now(),e:k});if(evs.length>300)evs=evs.slice(-300);saveEvs()};
+ window.__ev=function(k){var st=shareState();if(!ingestUrl()||!st.on||EV_OK.indexOf(k)<0)return;evs.push({t:Date.now(),e:k});if(evs.length>300)evs=evs.slice(-300);saveEvs();var cs=curSess();if(cs){cs.c[k]=Math.min((cs.c[k]||0)+1,10000);cs.sent=false;saveSess()}};
  try{if(navigator.userAgentData&&navigator.userAgentData.getHighEntropyValues)navigator.userAgentData.getHighEntropyValues(["model"]).then(function(hv){var m=String(hv&&hv.model||"");devModel=/^[A-Za-z0-9][A-Za-z0-9 ._()\/+-]{0,39}$/.test(m)?m:"";drawShare()}).catch(function(){})}catch(e){}
  function usagePayload(){
   var st=shareState(),real=entries.filter(function(t){return String(t.id).indexOf("demo-")!==0});
@@ -2043,16 +2051,17 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   return {v:2,id:st.id||"(created when you switch it on)",app:APP_V,day:now.toISOString().slice(0,10),since:(usage.first||"").slice(0,10),days_active:Object.keys(usage.days||{}).length,installed:inst,os:cleanName(osName()),browser:cleanName(browserName()),
    model:devModel,tz:/^[A-Za-z][A-Za-z0-9_\/+-]{0,39}$/.test(tz)?tz:"",utc_offset_min:off,local_time:local,central_time:central,screen:Math.round(screen.width)+"x"+Math.round(screen.height),lang:/^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})?$/.test(lang)?lang:"",
    active_sec_today:act.day===now.toISOString().slice(0,10)?act.sec:0,sessions_today:act.day===now.toISOString().slice(0,10)?act.sessions:0,active_sec_total:act.total,trades:real.length,closed:real.filter(isClosed).length,plans:plans.filter(function(x){return String(x.id).indexOf("demo-")!==0}).length,counts:C,
-   events:evs.map(function(x){return new Date(x.t).toISOString().slice(0,19)+"Z "+x.e})};
+   events:evs.map(function(x){return new Date(x.t).toISOString().slice(0,19)+"Z "+x.e}),
+   sessions:dirtySess().slice(-10).map(function(x){return {s:x.s,sec:x.sec,c:x.c}})};
  }
  function shareMsg(t){var n=$("shareNote");if(n)n.textContent=t}
  function sendShare(){
   var st=shareState(),url=ingestUrl();if(!url||!st.on)return Promise.resolve();
   if(!st.id){st.id=newShareId();saveShare()}
-  var sentN=evs.length,body=JSON.stringify(usagePayload()),day=new Date().toISOString().slice(0,10);
+  var sentN=evs.length,pl0=usagePayload(),inc={};pl0.sessions.forEach(function(x){inc[x.s]=sigOf(x)});var body=JSON.stringify(pl0),day=new Date().toISOString().slice(0,10);
   var opt={method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:body,credentials:"omit",referrerPolicy:"no-referrer"};
   shareMsg("Sending…");
-  function done(how,said){st.last=day;st.lastAt=Date.now();st.lastSec=act.total;if(how==="ok"){evs=evs.slice(sentN);saveEvs()}saveShare();shareMsg(how==="ok"?"Sent today. Thank you.":how==="refused"?"The server answered \""+said+"\" and did not save it. Tell whoever gave you the app.":"Sent today, but this device could not confirm it arrived.");drawShare()}
+  function done(how,said){st.last=day;st.lastAt=Date.now();st.lastSec=act.total;if(how==="ok"){evs=evs.slice(sentN);saveEvs();sess.forEach(function(x){if(inc[x.s]!=null&&inc[x.s]===sigOf(x))x.sent=true});saveSess()}saveShare();shareMsg(how==="ok"?"Sent today. Thank you.":how==="refused"?"The server answered \""+said+"\" and did not save it. Tell whoever gave you the app.":"Sent today, but this device could not confirm it arrived.");drawShare()}
   var o1={method:opt.method,headers:opt.headers,body:opt.body,credentials:"omit",referrerPolicy:"no-referrer",redirect:"follow"};
   return fetch(url,o1).then(function(r){if(!r.ok)throw new Error("bad");return r.text().then(function(t){t=String(t||"").replace(/[^A-Za-z0-9 ]/g,"").slice(0,20);if(t==="ok")done("ok");else done("refused",t||"nothing")},function(){done("unconfirmed")})}).catch(function(){
    return fetch(url,{method:"POST",mode:"no-cors",headers:opt.headers,body:body,credentials:"omit",referrerPolicy:"no-referrer"}).then(function(){done("unconfirmed")})
@@ -2063,13 +2072,21 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
   var st=shareState();$("shareOn").checked=st.on;$("shareNow").disabled=!st.on;
   $("sharePre").textContent=JSON.stringify(usagePayload(),null,1);
  }
- $("shareOn").onchange=function(){var st=shareState();st.on=$("shareOn").checked;if(st.on&&!st.id)st.id=newShareId();if(st.on){lastAct=Date.now();act.lastEnd=lastAct;act.day=new Date().toISOString().slice(0,10);act.sessions=1;saveAct()}saveShare();drawShare();
-  if(st.on){sendShare()}else{evs=[];saveEvs();act={day:"",sec:0,sessions:0,total:0,lastEnd:0};saveAct();shareMsg("Sharing is off. Nothing more will be sent, and the saved activity list was deleted from this device.")}};
+ $("shareOn").onchange=function(){var st=shareState();st.on=$("shareOn").checked;if(st.on&&!st.id)st.id=newShareId();if(st.on){lastAct=Date.now();act.lastEnd=lastAct;act.day=new Date().toISOString().slice(0,10);act.sessions=1;saveAct();newSess(Date.now())}saveShare();drawShare();
+  if(st.on){sendShare()}else{evs=[];saveEvs();sess=[];saveSess();act={day:"",sec:0,sessions:0,total:0,lastEnd:0};saveAct();shareMsg("Sharing is off. Nothing more will be sent, and the saved activity list was deleted from this device.")}};
  $("shareNow").onclick=function(){sendShare()};
  function maybeSend(){try{var st=shareState();if(!ingestUrl()||!st.on||navigator.onLine===false)return;
-  var newDay=st.last!==new Date().toISOString().slice(0,10),more=Date.now()-st.lastAt>=10800000&&act.total-st.lastSec>=60;if(newDay||more)sendShare()}catch(e){}}
+  var newDay=st.last!==new Date().toISOString().slice(0,10),more=Date.now()-st.lastAt>=10800000&&act.total-st.lastSec>=60,pend=dirtySess().length>0&&Date.now()-st.lastAt>=300000;if(newDay||more||pend)sendShare()}catch(e){}}
  setTimeout(maybeSend,3000);
- document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")maybeSend()});
+
+ (function(){var pc=$("pilot");if(!pc)return;var st;try{st=shareState()}catch(e){return}
+  if(ingestUrl()&&!st.asked){pc.hidden=false}
+  function ans(yes){var s2=shareState();s2.asked=true;if(yes){s2.on=true;if(!s2.id)s2.id=newShareId();lastAct=Date.now();act.lastEnd=lastAct;act.day=new Date().toISOString().slice(0,10);act.sessions=1;saveAct();newSess(Date.now())}saveShare();pc.hidden=true;drawShare();if(yes)sendShare()}
+  $("pilotYes").onclick=function(){ans(true)};$("pilotNo").onclick=function(){ans(false)}})();
+ document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")maybeSend();else flushSess()});
+ /* when the app is put away, hand over the session once without waiting for an answer; the next open confirms it */
+ function flushSess(){try{var st=shareState(),url=ingestUrl();if(!url||!st.on||navigator.onLine===false||!dirtySess().length||Date.now()-st.lastAt<300000)return;
+  st.lastAt=Date.now();saveShare();fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(usagePayload()),credentials:"omit",referrerPolicy:"no-referrer",keepalive:true,mode:"no-cors"}).catch(function(){})}catch(e){}}
 
  /* ---- feedback goes to the same place as usage sharing (only when the tester taps Send) ---- */
  function fbPayload(){var st=shareState(),d=$("fbDis").value,t=$("fbTxt").value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").trim().slice(0,1000);
