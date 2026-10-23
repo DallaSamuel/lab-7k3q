@@ -115,9 +115,10 @@
   function cleanSymbol(s, known) {
     var u = String(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
     if (known(u)) return u;
-    var aliases = { XAUUSD: ["GOLD"], US500: ["SPX500", "SP500", "US500CASH"], NAS100: ["USTEC", "NDX100", "NAS100CASH"], US30: ["DJ30", "WS30"], GER40: ["DE40", "DAX40", "GER30"], UK100: ["FTSE100"], JPN225: ["JP225", "NIKKEI225"] };
-    for (var k in aliases) if (aliases[k].indexOf(u) > -1) return k;
-    for (var n = u.length - 1; n >= 5; n--) { var p = u.slice(0, n); if (known(p)) return p; }
+    var aliases = { XAUUSD: ["GOLD"], US500: ["SPX500", "SP500", "SPX", "US500CASH", "SPX500USD"], NAS100: ["US100", "USTEC", "USTEC100", "NDX100", "NDX", "NAS100CASH", "NAS100USD"], US30: ["DJ30", "WS30", "DOW30", "DJI30", "DOW", "US30CASH", "US30USD"], GER40: ["DE40", "DE30", "DAX40", "DAX30", "DAX", "GER30", "GER40CASH", "DE30EUR"], UK100: ["FTSE100", "FTSE", "UK100CASH", "UK100GBP"], JPN225: ["JP225", "NIKKEI225", "NIKKEI", "NI225", "J225", "JPN225CASH", "JP225USD"], AUS200: ["AU200", "ASX200", "AUS200CASH", "AU200AUD"], FRA40: ["F40", "CAC40", "FRA40CASH", "FR40"], HK50: ["HSI", "HSI50", "HK50CASH", "HKG50", "HKG33", "HK33"], EU50: ["STOXX50", "ESTX50", "EUSTX50", "EU50CASH", "SX5E"], ESP35: ["IBEX35", "IBEX", "SPAIN35", "ES35", "ESP35CASH"] };
+    function aliasOf(x) { for (var k in aliases) if (aliases[k].indexOf(x) > -1) return k; return null; }
+    if (aliasOf(u)) return aliasOf(u);
+    for (var n = u.length - 1; n >= 3; n--) { var p = u.slice(0, n); if (n >= 4 && known(p)) return p; var al = aliasOf(p); if (al) return al; }
     return u;
   }
   var api = { parseReport: parseReport, cleanSymbol: cleanSymbol, num: num, time: time };

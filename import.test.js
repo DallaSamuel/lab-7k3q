@@ -14,3 +14,7 @@ t('csv comma/semicolon',()=>{
 t('garbage',()=>{const r=parseReport('hello world');a.equal(r.rows.length,0);a.ok(r.warnings.length)});
 t('numbers',()=>{a.equal(num('1 234,56'),1234.56);a.equal(num('1,234.56'),1234.56);a.equal(num('-0.5'),-0.5);a.equal(num(''),null)});
 t('symbols',()=>{const k=s=>['EURUSD','XAUUSD','US500'].includes(s);a.equal(cleanSymbol('EURUSD.m',k),'EURUSD');a.equal(cleanSymbol('EURUSDm',k),'EURUSD');a.equal(cleanSymbol('GOLD',k),'XAUUSD');a.equal(cleanSymbol('FOO',k),'FOO')});
+
+t('index symbols from real brokers',()=>{const known=u=>['US30','US500','NAS100','GER40','UK100','JPN225','AUS200','FRA40','HK50','EU50','ESP35','EURUSD','XAUUSD'].includes(u);
+ const want={'US30.cash':'US30','US30m':'US30','DJ30':'US30','US100':'NAS100','US100.cash':'NAS100','NAS100.i':'NAS100','DAX':'GER40','DAX.cash':'GER40','GER40.cash':'GER40','FTSE':'UK100','JP225':'JPN225','AU200':'AUS200','ASX200':'AUS200','CAC40':'FRA40','HSI':'HK50','STOXX50':'EU50','IBEX35':'ESP35','GOLD.m':'XAUUSD','EURUSD.m':'EURUSD','MYSTERY':'MYSTERY'};
+ for(const k in want)a.equal(cleanSymbol(k,known),want[k],k)});

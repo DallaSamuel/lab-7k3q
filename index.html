@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-rBO55crYljKUWZjVf9JGLolb1HvmOnXizbwjEppWjAM=' 'sha256-wl2zh7xn9VUInjW8+S+HXmzCPS0Q0wM9YjlorHv0VGk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-u1lGvn2zFlGtDf3KocOzEfuT8nras8401VJyhuApC1U='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -221,6 +221,10 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .rtag{font-weight:700}.rtag.aplus{color:#f7e08a}.rtag.none{color:#ff8a7a}
 .pline{margin:2px 0;font-size:.88rem}
 
+
+.pfchip{border-radius:12px;padding:10px 12px;font-weight:700;font-size:.9rem;margin:2px 0 10px}
+.rule{background:rgba(255,255,255,.04);border-radius:10px;padding:0 10px;margin:6px 0;color:var(--text);font-size:.92rem}.rule span{flex:1}.rulex{min-height:44px;min-width:44px;background:none;border:0;color:var(--mute);font-size:.75rem;text-decoration:underline}.ruleadd{display:flex;gap:8px;margin:10px 0}.ruleadd input{flex:1}
+.pf-green{background:#1f4d33;color:#d8f5e3;border:1px solid #2f7a52}.pf-amber{background:#5a4306;color:#ffe9a8;border:1px solid #a37c10}.pf-red{background:#6b1b1b;color:#ffd9d6;border:1px solid #b53a3a}
 /* Look: Black and champagne (v19) */
 html[data-look="champagne"]{--gold:#E6D3A8;--text:#f2ede3;--mute:#a39c8d;background:#000}
 html[data-look="champagne"] body{background:#000}
@@ -356,6 +360,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <label for="rReason">Reason for trade (optional)</label>
 <input id="rReason" type="text" placeholder="e.g. Break and retest of resistance">
 <p class="plannote warn" id="tiltNote" hidden></p>
+<p class="plannote" id="propNote" hidden></p>
 <button class="btn logbtn" id="logBtn" type="button">Log this trade</button>
 <button class="btn ghost" id="cardBtn" type="button">Share trade card</button>
 <label class="chk" for="hideMoney"><input type="checkbox" id="hideMoney"> Hide dollar amounts and lot size on shared cards</label>
@@ -411,6 +416,24 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <section class="panel" aria-label="Look"><div class="head"><h2>Look</h2></div>
 <p class="note">Pick the colours you like. Your trades are not touched.</p>
 <label for="lookSel">Colours</label><select id="lookSel"><option value="classic">Black and gold (original)</option><option value="champagne">Black and champagne</option></select></section>
+<section class="panel" id="propPanel" aria-label="Prop firm account"><div class="head"><h2>Prop firm account</h2></div>
+<p class="note">Track a funded or challenge account against its rules. It reads the trades you close in the journal, and nothing leaves your phone.</p>
+<label class="chk" for="pfOn"><input type="checkbox" id="pfOn"> Track a prop firm account</label>
+<div id="pfFields" hidden>
+<label for="pfFirm">Prop firm name</label><input id="pfFirm" type="text" maxlength="40" placeholder="e.g. FTMO, Goat, FundedNext" autocomplete="off">
+<label for="pfType">Account type</label><select id="pfType"><option value="instant">Instant</option><option value="one">One-step</option><option value="two">Two-step</option></select>
+<div class="two"><div><label for="pfSize">Account size ($)</label><input id="pfSize" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 10000"></div>
+<div><label for="pfStart">Started on</label><input id="pfStart" type="date"></div></div>
+<div class="two"><div><label for="pfDaily">Max daily loss (%)</label><input id="pfDaily" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 5"></div>
+<div><label for="pfMax">Max overall loss (%)</label><input id="pfMax" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 10"></div></div>
+<label for="pfDailyBase">Daily loss is measured from</label><select id="pfDailyBase"><option value="size">The account size</option><option value="day">The balance at the start of the day</option></select>
+<label for="pfMaxType">Max loss works as</label><select id="pfMaxType"><option value="static">Fixed (from the account size)</option><option value="trailing">Trailing (from the highest balance)</option></select>
+<div class="two"><div><label for="pfTarget">Profit target (%)</label><input id="pfTarget" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 8"></div>
+<div><label for="pfDays">Minimum trading days</label><input id="pfDays" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 5"></div></div>
+<div class="two"><div><label for="pfRisk">Risk per trade (%)</label><input id="pfRisk" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 0.5"></div>
+<div><label for="pfStop">Stop after this many losses a day</label><input id="pfStop" type="number" inputmode="numeric" min="0" step="1" placeholder="0 = off"></div></div>
+<p class="note">Uses closed trades only. Open trades and floating losses are not counted. Firms count loss in different ways, so check your firm's rules. This is information, not advice.</p>
+</div></section>
 <section class="panel" aria-label="Time"><div class="head"><h2>Time</h2></div>
 <p class="note">Times in your journal follow this setting. Your device clock is not changed, and your saved trades are not touched.</p>
 <label for="tzSel">Times shown in</label><select id="tzSel"></select>
@@ -577,9 +600,10 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
   function cleanSymbol(s, known) {
     var u = String(s).toUpperCase().replace(/[^A-Z0-9]/g, "");
     if (known(u)) return u;
-    var aliases = { XAUUSD: ["GOLD"], US500: ["SPX500", "SP500", "US500CASH"], NAS100: ["USTEC", "NDX100", "NAS100CASH"], US30: ["DJ30", "WS30"], GER40: ["DE40", "DAX40", "GER30"], UK100: ["FTSE100"], JPN225: ["JP225", "NIKKEI225"] };
-    for (var k in aliases) if (aliases[k].indexOf(u) > -1) return k;
-    for (var n = u.length - 1; n >= 5; n--) { var p = u.slice(0, n); if (known(p)) return p; }
+    var aliases = { XAUUSD: ["GOLD"], US500: ["SPX500", "SP500", "SPX", "US500CASH", "SPX500USD"], NAS100: ["US100", "USTEC", "USTEC100", "NDX100", "NDX", "NAS100CASH", "NAS100USD"], US30: ["DJ30", "WS30", "DOW30", "DJI30", "DOW", "US30CASH", "US30USD"], GER40: ["DE40", "DE30", "DAX40", "DAX30", "DAX", "GER30", "GER40CASH", "DE30EUR"], UK100: ["FTSE100", "FTSE", "UK100CASH", "UK100GBP"], JPN225: ["JP225", "NIKKEI225", "NIKKEI", "NI225", "J225", "JPN225CASH", "JP225USD"], AUS200: ["AU200", "ASX200", "AUS200CASH", "AU200AUD"], FRA40: ["F40", "CAC40", "FRA40CASH", "FR40"], HK50: ["HSI", "HSI50", "HK50CASH", "HKG50", "HKG33", "HK33"], EU50: ["STOXX50", "ESTX50", "EUSTX50", "EU50CASH", "SX5E"], ESP35: ["IBEX35", "IBEX", "SPAIN35", "ES35", "ESP35CASH"] };
+    function aliasOf(x) { for (var k in aliases) if (aliases[k].indexOf(x) > -1) return k; return null; }
+    if (aliasOf(u)) return aliasOf(u);
+    for (var n = u.length - 1; n >= 3; n--) { var p = u.slice(0, n); if (n >= 4 && known(p)) return p; var al = aliasOf(p); if (al) return al; }
     return u;
   }
   var api = { parseReport: parseReport, cleanSymbol: cleanSymbol, num: num, time: time };
@@ -588,17 +612,19 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 
 </script>
 <script>
+/* clickjacking guard: if another site frames this page, break out (a meta CSP cannot forbid framing) */
+try{if(window.top!==window.self){document.documentElement.style.display="none";window.top.location.replace(window.location.href)}}catch(e){document.documentElement.style.display="none"}
 (function(){
 var GROUPS=[
  ["USD pairs",["EURUSD","GBPUSD","AUDUSD","NZDUSD","USDJPY","USDCAD","USDCHF"]],
  ["EUR crosses",["EURGBP","EURAUD","EURCAD","EURCHF","EURJPY","EURNZD"]],
  ["GBP crosses",["GBPJPY","GBPAUD","GBPCAD","GBPCHF","GBPNZD"]],
  ["Other crosses",["AUDJPY","AUDCAD","AUDCHF","AUDNZD","NZDJPY","NZDCAD","NZDCHF","CADJPY","CADCHF","CHFJPY"]],
- ["Gold, crypto and indices",["XAUUSD","BTCUSD","US500","NAS100","US30","JPN225","GER40","UK100"]]
+ ["Gold, crypto and indices",["XAUUSD","BTCUSD","US500","NAS100","US30","JPN225","GER40","UK100","AUS200","FRA40","HK50","EU50","ESP35"]]
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v22";
+var APP_V="v26";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -620,7 +646,7 @@ var SPEC={
  XAUUSD:{pip:0.10,contract:100,unit:"oz",dec:2,mode:"fixed"},
  BTCUSD:{pip:1,contract:1,unit:"BTC",dec:2,mode:"fixed"}
 };
-["US500","NAS100","US30","JPN225","GER40","UK100"].forEach(function(c){SPEC[c]={pip:1,contract:1,unit:"units",dec:1,mode:"fixed",index:true}});
+["US500","NAS100","US30","JPN225","GER40","UK100","AUS200","FRA40","HK50","EU50","ESP35"].forEach(function(c){SPEC[c]={pip:1,contract:1,unit:"units",dec:1,mode:"fixed",index:true}});
 GROUPS.forEach(function(g){g[1].forEach(function(c){
  if(SPEC[c])return;
  var b=c.slice(0,3),q=c.slice(3),jpy=q==="JPY";
@@ -635,9 +661,14 @@ var EXTRA={
  US30:["Dow Jones 30","dow dji wall street"],
  JPN225:["Nikkei 225","nikkei nk225 japan"],
  GER40:["DAX 40","dax germany"],
- UK100:["FTSE 100","ftse uk"]
+ UK100:["FTSE 100","ftse uk"],
+ AUS200:["Australia 200","asx australia"],
+ FRA40:["France 40","cac paris france"],
+ HK50:["Hong Kong 50","hang seng hsi hong kong"],
+ EU50:["Euro Stoxx 50","stoxx europe eurostoxx"],
+ ESP35:["Spain 35","ibex spain"]
 };
-var CATDEF={majors:GROUPS[0][1],minors:GROUPS[1][1].concat(GROUPS[2][1],GROUPS[3][1]),idx:["US500","NAS100","US30","JPN225","GER40","UK100"],gc:["XAUUSD","BTCUSD"]};
+var CATDEF={majors:GROUPS[0][1],minors:GROUPS[1][1].concat(GROUPS[2][1],GROUPS[3][1]),idx:["US500","NAS100","US30","JPN225","GER40","UK100","AUS200","FRA40","HK50","EU50","ESP35"],gc:["XAUUSD","BTCUSD"]};
 var TABS=[["all","All"],["fav","\u2605 Favourites"],["majors","Majors"],["minors","Minors"],["idx","Indices"],["gc","Gold & crypto"]];
 var ALL=[];
 GROUPS.forEach(function(g){g[1].forEach(function(c){
@@ -774,7 +805,7 @@ function chooseInst(code){
  $("inst").value=code;
  updateBtn();closeSheet();instChanged();var cc=settings.contract&&settings.contract[code];if(cc)$("contract").value=cc;saveSettings();
 }
-function indexHint(code){var cur={JPN225:"yen",GER40:"euros",UK100:"pounds"}[code];if(cur)return "1 point = 1 pip. Points on "+code+" are in "+cur+", not dollars. Put the dollar value of one point per lot in Contract size.";return "1 point = 1 pip. Assumes $1 per point per lot. Change the contract size to match your broker."}
+function indexHint(code){var cur={JPN225:"yen",GER40:"euros",UK100:"pounds",AUS200:"Australian dollars",FRA40:"euros",HK50:"Hong Kong dollars",EU50:"euros",ESP35:"euros"}[code];if(cur)return "1 point = 1 pip. Points on "+code+" are in "+cur+", not dollars. Put the dollar value of one point per lot in Contract size.";return "1 point = 1 pip. Assumes $1 per point per lot. Change the contract size to match your broker."}
 function instChanged(){
  var code=$("inst").value,s=SPEC[code];
  var t;
@@ -862,7 +893,7 @@ function calcSize(){
  }
  show({title:"Position size",big:n(lots,2),sub:"standard lots (rounded down to 0.01)",rows:rows,note:note,loggable:true});
  last={inst:b.inst,side:side,lots:lots,risk:actual,target:target,sl:sl,tp:tp,rr:rr,profit:profit,entry:en,slPrice:slP,tpPrice:hasTp?tpP:null,pv:pv,bal:(bal>0?bal:null)};
- drawTilt();
+ drawTilt();drawProp();
  guardLine(lots,sl,pv);
 }
 function calcPnl(){
@@ -1032,7 +1063,7 @@ function storeNoteText(inSettings){
 }
 function save(){try{localStorage.setItem(JKEY,JSON.stringify(entries));memOnly=false}catch(e){memOnly=true}var el=document.getElementById("storeNote");if(el)el.textContent=storeNoteText()}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
-function loadSettings(){try{var r=localStorage.getItem(SKEY);settings=r?JSON.parse(r):{};if(!settings||typeof settings!=="object")settings={}}catch(e){settings={}}if(!settings.contract)settings.contract={}}
+function loadSettings(){try{var r=localStorage.getItem(SKEY);settings=r?JSON.parse(r):{};if(!settings||typeof settings!=="object"||Array.isArray(settings))settings={}}catch(e){settings={}}if(!settings.contract||typeof settings.contract!=="object"||Array.isArray(settings.contract))settings.contract={};settings.prop=cleanProp(settings.prop);settings.rules=cleanRules(settings.rules)}
 function saveSettings(){
  var inst=$("inst").value;
  settings.inst=inst;settings.mode=mode;
@@ -1768,9 +1799,135 @@ function drawTilt(){
  var m=last&&isFinite(last.lots)?tiltNow(entries,last.lots,Date.now()):[];
  n.textContent=m.join(" ");n.hidden=!m.length;if(m.length)bump("tilt");
 }
+
+/* ---- prop firm mode: reads closed trades in the journal, nothing is sent anywhere ---- */
+function cleanProp(o){
+ o=o&&typeof o==="object"&&!Array.isArray(o)?o:{};
+ function pn(v,max,dflt){v=Number(v);return isFinite(v)&&v>=0?Math.min(v,max):dflt}
+ var st=typeof o.start==="string"&&/^\d{4}-\d\d-\d\d$/.test(o.start)&&isFinite(Date.parse(o.start))?o.start:"";
+ return {on:o.on===true,firm:typeof o.firm==="string"?o.firm.replace(/[\u0000-\u001F]/g,"").slice(0,40):"",
+  type:["instant","one","two"].indexOf(o.type)>-1?o.type:"two",size:pn(o.size,1e9,0),daily:pn(o.daily,100,0),max:pn(o.max,100,0),
+  dailyBase:o.dailyBase==="day"?"day":"size",maxType:o.maxType==="trailing"?"trailing":"static",target:pn(o.target,1000,0),
+  days:Math.floor(pn(o.days,365,0)),risk:pn(o.risk,100,0.5),stop:Math.floor(pn(o.stop,50,0)),start:st};
+}
+
+/* ---- rules for the day (v26): her checklist, ticks are saved per day on this phone only ---- */
+var DEF_RULES=[["news","No trades during news"],["risk","Risk only {R}% per trade"],["sl","Stop loss set before entry"],["rr","Minimum 1:2 risk to reward"],["loss","Stop for the day after {L} losses"],["aplus","Only A+ setups from my plan"]];
+function cleanRules(o){
+ o=o&&typeof o==="object"&&!Array.isArray(o)?o:{};
+ var custom=[],ids={};DEF_RULES.forEach(function(d){ids[d[0]]=1});
+ (Array.isArray(o.custom)?o.custom:[]).slice(0,12).forEach(function(c){
+  if(!c||typeof c!=="object")return;var t=typeof c.t==="string"?c.t.replace(/[\u0000-\u001F]/g,"").trim().slice(0,80):"";
+  var id=typeof c.id==="string"&&/^c\d{1,13}$/.test(c.id)?c.id:"";if(!t||!id||ids[id])return;ids[id]=1;custom.push({id:id,t:t})});
+ var ticks={},tk=o.ticks&&typeof o.ticks==="object"&&!Array.isArray(o.ticks)?o.ticks:{};
+ Object.keys(tk).filter(function(k){return /^\d{1,6}$/.test(k)}).sort(function(a,b){return b-a}).slice(0,60).forEach(function(k){
+  if(!Array.isArray(tk[k]))return;var seen={},list=[];tk[k].forEach(function(i){if(typeof i==="string"&&ids[i]&&!seen[i]){seen[i]=1;list.push(i)}});if(list.length)ticks[k]=list});
+ return {custom:custom,ticks:ticks};
+}
+function ruleDay(now){
+ var hr=parseInt(($("gHour")||{}).value,10);if(!(hr>=0&&hr<=23))hr=0;
+ var z=tzShow(),off=0;try{off=z?zoneOffsetMs(now,z):-new Date(now).getTimezoneOffset()*60000}catch(e){}
+ return String(Math.floor((now+off-hr*3600000)/864e5));
+}
+function ruleList(){
+ var P=settings&&settings.prop,R=P&&P.on&&P.risk>0?P.risk:0.5,L=P&&P.on&&P.stop>0?P.stop:2;
+ var out=DEF_RULES.map(function(d){return {id:d[0],t:d[1].replace("{R}",String(R)).replace("{L}",String(L)),def:true}});
+ ((settings.rules||cleanRules(null)).custom).forEach(function(c){out.push({id:c.id,t:c.t,def:false})});
+ return out;
+}
+function renderRulesCard(box){
+ var st=settings.rules=cleanRules(settings.rules),day=ruleDay(Date.now()),list=ruleList(),ticked=st.ticks[day]||[];
+ var s=h("div","rv");s.id="rulesCard";s.appendChild(h("div","rvt","My rules for the day"));
+ s.appendChild(h("p","note","Tick each rule you have confirmed before you trade. Ticks reset every day and stay on this phone."));
+ function save(){settings.rules=cleanRules(st);saveSettings();renderReview()}
+ list.forEach(function(r){
+  var l=h("label","chk rule"),i=document.createElement("input");i.type="checkbox";i.checked=ticked.indexOf(r.id)>-1;
+  i.addEventListener("change",function(){var cur=(st.ticks[day]||[]).filter(function(x){return x!==r.id});if(i.checked)cur.push(r.id);if(cur.length)st.ticks[day]=cur;else delete st.ticks[day];save()});
+  l.appendChild(i);l.appendChild(h("span",null,r.t));
+  if(!r.def){var x=h("button","rulex","Remove");x.type="button";x.setAttribute("aria-label","Remove rule: "+r.t);x.addEventListener("click",function(ev){ev.preventDefault();st.custom=st.custom.filter(function(c){return c.id!==r.id});save()});l.appendChild(x)}
+  s.appendChild(l)});
+ var add=h("div","ruleadd"),inp=document.createElement("input");inp.type="text";inp.maxLength=80;inp.id="ruleNew";inp.placeholder="Type your custom rule here";inp.setAttribute("aria-label","New custom rule");
+ var btn=h("button","btn ghost","Add");btn.type="button";btn.id="ruleAdd";
+ function doAdd(){var t=inp.value.replace(/[\u0000-\u001F]/g,"").trim().slice(0,80);if(!t||st.custom.length>=12)return;st.custom.push({id:"c"+Date.now(),t:t});save()}
+ btn.addEventListener("click",doAdd);inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();doAdd()}});
+ add.appendChild(inp);add.appendChild(btn);s.appendChild(add);
+ var tot=list.length,done=list.filter(function(r){return ticked.indexOf(r.id)>-1}).length,miss=tot-done;
+ var status=miss===0?"green":miss<=2?"amber":"red";
+ var msg=miss===0?"GREEN. All "+tot+" rules confirmed. Trade your plan.":(status==="amber"?"AMBER. ":"RED. ")+done+" of "+tot+" rules ticked. "+miss+(miss===1?" rule is":" rules are")+" not confirmed. Check before you trade.";
+ var chip=h("div","pfchip pf-"+status,msg);chip.id="rulesChip";chip.setAttribute("role","status");s.appendChild(chip);
+ s.appendChild(h("p","note","Green is all ticked, amber is one or two missing, red is three or more missing. These cut-offs are a starting guess you can change later. Information only, not advice."));
+ box.appendChild(s);
+}
+function propCalc(now){
+ var P=settings&&settings.prop;if(!P||!P.on||!(P.size>0))return null;
+ var hr=parseInt(($("gHour")||{}).value,10);if(!(hr>=0&&hr<=23))hr=0;
+ var z=tzShow(),offOf=function(ms){try{return z?zoneOffsetMs(ms,z):-new Date(ms).getTimezoneOffset()*60000}catch(e){return 0}};
+ var dKey=function(ms){return Math.floor((ms+offOf(ms)-hr*3600000)/864e5)};
+ var startMs=P.start?Date.parse(P.start+"T00:00:00"):0;if(!isFinite(startMs))startMs=0;
+ var tr=entries.filter(function(e){var r=e.result;return String(e.id).indexOf("demo-")!==0&&r&&r.closedAt&&typeof r.pnl==="number"&&isFinite(r.pnl)&&Date.parse(r.closedAt)>=startMs}).map(function(e){return {t:Date.parse(e.closedAt||e.result.closedAt),p:e.result.pnl}}).filter(function(x){return isFinite(x.t)}).sort(function(a,b){return a.t-b.t});
+ var tdy=dKey(now),bal=P.size,peak=P.size,todayPnl=0,balStartDay=P.size,days={},lossesToday=0;
+ tr.forEach(function(x){
+  if(dKey(x.t)<tdy)balStartDay=bal+x.p;   /* balance after the last trade before today */
+  bal+=x.p;if(bal>peak)peak=bal;days[dKey(x.t)]=1;
+  if(dKey(x.t)===tdy){todayPnl+=x.p;if(x.p<0)lossesToday++}
+ });
+ if(!tr.some(function(x){return dKey(x.t)<tdy}))balStartDay=P.size;
+ var base=P.dailyBase==="day"?balStartDay:P.size,dLimit=base*P.daily/100,dUsed=Math.max(0,-todayPnl),dRemain=Math.max(0,dLimit-dUsed);
+ var mAllowed=P.size*P.max/100,dd=Math.max(0,(P.maxType==="trailing"?peak:P.size)-bal),mUsed=mAllowed>0?dd/mAllowed:0,floor=(P.maxType==="trailing"?peak:P.size)-mAllowed;
+ var tAmt=P.size*P.target/100,prog=tAmt>0?Math.max(0,(bal-P.size)/tAmt):0;
+ var nDays=Object.keys(days).length,capUsd=bal*P.risk/100;
+ var dPct=dLimit>0?dUsed/dLimit:0,stopHit=P.stop>0&&lossesToday>=P.stop,why=[],st="green";
+ if(P.daily>0&&dPct>=1){st="red";why.push("daily loss limit reached")}
+ if(P.max>0&&mUsed>=1){st="red";why.push("max loss limit reached")}
+ if(stopHit){st="red";why.push("you have taken "+lossesToday+" losses today, your stop rule")}
+ if(st==="green"){if(P.daily>0&&dPct>=0.6){st="amber";why.push("daily loss "+Math.round(dPct*100)+"% used")}if(P.max>0&&mUsed>=0.6){st="amber";why.push("max loss "+Math.round(mUsed*100)+"% used")}}
+ return {P:P,bal:bal,peak:peak,todayPnl:todayPnl,dLimit:dLimit,dUsed:dUsed,dRemain:dRemain,dPct:dPct,mAllowed:mAllowed,mUsed:mUsed,floor:floor,tAmt:tAmt,prog:prog,nDays:nDays,capUsd:capUsd,lossesToday:lossesToday,status:st,why:why,n:tr.length};
+}
+function drawProp(){
+ var nb=$("propNote");if(!nb)return;nb.hidden=true;nb.className="plannote";
+ var c=propCalc(Date.now());if(!c||!last||!(last.risk>=0))return;
+ var m=[],warn=c.status==="red";
+ if(c.P.risk>0&&last.risk>c.capUsd*1.0001){m.push("This trade risks "+usd(last.risk)+", above your "+c.P.risk+"% cap ("+usd(c.capUsd)+").");warn=true}
+ if(c.P.daily>0){if(last.risk>c.dRemain+0.005){m.push("Only "+usd(c.dRemain)+" of daily loss room left, and this trade risks "+usd(last.risk)+".");warn=true}else m.push(usd(c.dRemain)+" of daily loss room left; this trade uses "+Math.round(last.risk/Math.max(c.dLimit,1e-9)*100)+"% of the daily limit.")}
+ if(c.status==="red")m.push("Prop firm status is RED ("+c.why.join(", ")+").");
+ else if(c.status==="amber")m.push("Prop firm status is AMBER ("+c.why.join(", ")+").");
+ nb.textContent="Prop firm"+(c.P.firm?" ("+c.P.firm+")":"")+": "+m.join(" ");
+ nb.className="plannote"+(warn?" warn":"");nb.hidden=false;
+}
+function renderPropCard(box){
+ var c=propCalc(Date.now());if(!c)return;
+ var P=c.P,s=h("div","rv");
+ s.appendChild(h("div","rvt","Prop firm: "+(P.firm||"my account")+" ("+{instant:"Instant",one:"One-step",two:"Two-step"}[P.type]+")"));
+ var chip=h("div","pfchip pf-"+c.status,{green:"GREEN. You are inside your rules.",amber:"AMBER. Careful: "+c.why.join(", ")+".",red:"RED. "+c.why.join(", ")+"."}[c.status]);chip.setAttribute("role","status");s.appendChild(chip);
+ function row(a,b){var r=h("div","rvrow");r.appendChild(h("span",null,a));r.appendChild(h("span",null,b));s.appendChild(r)}
+ row("Balance (closed trades)",usd(c.bal)+" of "+usd(P.size));
+ row("Today",money(c.todayPnl));
+ if(P.daily>0)row("Daily loss used",usd(c.dUsed)+" of "+usd(c.dLimit)+" ("+Math.round(c.dPct*100)+"%), "+usd(c.dRemain)+" left");
+ if(P.max>0)row("Max loss used",Math.round(c.mUsed*100)+"% of "+usd(c.mAllowed)+" (floor "+usd(c.floor)+(P.maxType==="trailing"?", trailing":"")+")");
+ if(P.target>0)row("Profit target",Math.min(100,Math.round(c.prog*100))+"% of "+usd(c.tAmt));
+ if(P.days>0)row("Trading days",c.nDays+" of "+P.days+(c.nDays>=P.days?" (done)":""));
+ if(P.risk>0)row("Risk per trade cap",P.risk+"% = "+usd(c.capUsd));
+ if(P.stop>0)row("Losses today",c.lossesToday+" (stop after "+P.stop+")");
+ s.appendChild(h("p","note","Counts closed trades only, not open ones. Firms count loss in different ways, so check yours. Information only, not advice."));
+ box.appendChild(s);
+}
+function fillProp(){
+ var P=(settings&&settings.prop)||cleanProp(null);
+ var set=function(id,v){var e=$(id);if(e)e.value=v};
+ $("pfOn").checked=P.on;$("pfFields").hidden=!P.on;
+ set("pfFirm",P.firm);set("pfType",P.type);set("pfSize",P.size||"");set("pfStart",P.start);set("pfDaily",P.daily||"");set("pfMax",P.max||"");
+ set("pfDailyBase",P.dailyBase);set("pfMaxType",P.maxType);set("pfTarget",P.target||"");set("pfDays",P.days||"");set("pfRisk",P.risk);set("pfStop",P.stop||"");
+}
+function readProp(){
+ var g=function(id){return $(id).value};
+ settings.prop=cleanProp({on:$("pfOn").checked,firm:g("pfFirm"),type:g("pfType"),size:g("pfSize"),start:g("pfStart"),daily:g("pfDaily"),max:g("pfMax"),dailyBase:g("pfDailyBase"),maxType:g("pfMaxType"),target:g("pfTarget"),days:g("pfDays"),risk:g("pfRisk")===""?0.5:g("pfRisk"),stop:g("pfStop")});
+ $("pfFields").hidden=!settings.prop.on;saveSettings();renderReview();
+}
+["pfOn","pfFirm","pfType","pfSize","pfStart","pfDaily","pfMax","pfDailyBase","pfMaxType","pfTarget","pfDays","pfRisk","pfStop"].forEach(function(id){var e=$(id);if(e)e.addEventListener(id==="pfOn"||e.tagName==="SELECT"?"change":"input",readProp)});
 function renderReview(){
  var box=$("reviewBody");if(!box)return;box.innerHTML="";
  var closed=entries.filter(isClosed);
+ renderPropCard(box);renderRulesCard(box);
  var intro=h("p","note","Counts only trades with an exit price. A percentage appears once a group has "+MIN_PCT+" closed trades; before that you see plain counts.");
  box.appendChild(intro);
  if(closed.length<MIN_PCT){var meter=h("div","meter"),bar=h("i");bar.style.width=Math.min(100,closed.length/MIN_PCT*100)+"%";meter.appendChild(bar);box.appendChild(meter);
@@ -1873,6 +2030,11 @@ $("calcPanel").addEventListener("input",saveSettings);
 $("calcPanel").addEventListener("input",invalidate);
 document.addEventListener("keydown",function(e){if(e.key==="Enter"&&e.target.tagName==="INPUT"&&e.target.closest("#calcPanel"))calculate()});
 load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applySettings();renderCheck();renderPreMood();render();
+/* two tabs or the installed app plus a browser tab: when another one saves, take its copy so the next save here never overwrites it */
+window.addEventListener("storage",function(ev){try{
+ if(ev.key===JKEY){load();render()}
+ else if(ev.key===PKEY){loadPlans();if(typeof drawPlan==="function")drawPlan()}
+}catch(e){}});
 
 (function(){
  var w=$("welcome");$("hideMoney").checked=hideMoney();
@@ -1900,7 +2062,14 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
 })();
 
 (function(){
- try{var u=JSON.parse(localStorage.getItem(UKEY)||"null");if(u&&typeof u==="object"){usage=u;if(!usage.days)usage.days={}}}catch(e){}
+ try{var u=JSON.parse(localStorage.getItem(UKEY)||"null");if(u&&typeof u==="object"&&!Array.isArray(u)){
+  var cu={days:{}};   /* rebuild from scratch: only the shapes we expect survive */
+  Object.keys(u).forEach(function(k){
+   if(k==="days"){if(u.days&&typeof u.days==="object"&&!Array.isArray(u.days))Object.keys(u.days).slice(0,2000).forEach(function(d){if(/^\d{4}-\d\d-\d\d$/.test(d))cu.days[d]=1})}
+   else if(k==="first"){if(typeof u.first==="string"&&/^\d{4}-\d\d-\d\dT[0-9:.]{1,14}Z$/.test(u.first))cu.first=u.first}
+   else if(k==="fb"){if(u.fb&&typeof u.fb==="object"&&!Array.isArray(u.fb)){var f={};["fbDis","fbTxt"].forEach(function(q){if(typeof u.fb[q]==="string")f[q]=u.fb[q].slice(0,1000)});cu.fb=f}}
+   else if(/^[a-z_]{2,12}$/.test(k)){var n=Number(u[k]);if(isFinite(n)&&n>=0)cu[k]=Math.min(Math.floor(n),100000)}});
+  usage=cu}}catch(e){}
  if(!usage.first){usage.first=new Date().toISOString()}
  usage.days[new Date().toISOString().slice(0,10)]=1;try{localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){}
  var NAMES=["calc","journal","review","settings"],cur="calc";
@@ -2034,7 +2203,7 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
  function newSess(now){sess.push({s:new Date(now).toISOString().slice(0,19)+"Z",sec:0,c:{},sent:false});if(sess.length>20)sess=sess.slice(-20);saveSess()}
  function dirtySess(){return sess.filter(function(x){return !x.sent&&(x.sec>0||Object.keys(x.c).length>0)})}
  var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan","e_miss","e_side","e_other","tilt","brk","win","loss","graded","mood"],evs=[],devModel="";
- try{var er=JSON.parse(localStorage.getItem(EVKEY)||"[]");if(Array.isArray(er))evs=er.filter(function(x){return x&&typeof x.t==="number"&&isFinite(x.t)&&EV_OK.indexOf(x.e)>-1}).slice(-300)}catch(e){}
+ try{var er=JSON.parse(localStorage.getItem(EVKEY)||"[]");if(Array.isArray(er))evs=er.filter(function(x){return x&&typeof x.t==="number"&&isFinite(x.t)&&x.t>1e12&&x.t<4.1e12&&EV_OK.indexOf(x.e)>-1}).slice(-300)}catch(e){}
  try{var sr=JSON.parse(localStorage.getItem(SESSKEY)||"[]");if(Array.isArray(sr))sess=sr.filter(function(x){return x&&typeof x==="object"&&typeof x.s==="string"&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x.s)&&x.c&&typeof x.c==="object"}).slice(-20).map(function(x){var c={};EV_OK.forEach(function(k){var n=Number(x.c[k]);if(isFinite(n)&&n>0)c[k]=Math.min(Math.floor(n),10000)});return {s:x.s,sec:clampN(x.sec,86400),c:c,sent:x.sent===true}})}catch(e){}
  function saveEvs(){try{if(evs.length)localStorage.setItem(EVKEY,JSON.stringify(evs));else localStorage.removeItem(EVKEY)}catch(e){}}
  window.__ev=function(k){var st=shareState();if(!ingestUrl()||!st.on||EV_OK.indexOf(k)<0)return;evs.push({t:Date.now(),e:k});if(evs.length>300)evs=evs.slice(-300);saveEvs();var cs=curSess();if(cs){cs.c[k]=Math.min((cs.c[k]||0)+1,10000);cs.sent=false;saveSess()}};
@@ -2104,7 +2273,7 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
    fbDraw()}
   fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(pl),credentials:"omit",referrerPolicy:"no-referrer",redirect:"follow"}).then(function(r){if(!r.ok)throw new Error("bad");return r.text().then(function(t){t=String(t||"").replace(/[^A-Za-z0-9 ]/g,"").slice(0,20);if(t==="ok")fin(true);else fin(false,"The server answered \""+(t||"nothing")+"\" and did not save it. Your text is still here. Tell whoever gave you the app.")},function(){fin(false,"Sent, but this device could not confirm it arrived. Your text is still here.")})}).catch(function(){fin(false,"Could not send right now. Your text is still here. Try again when you are online.")});
  };
- function fillSettings(){drawClr();drawBuild();drawTz();drawShare();mountFeedback();fbDraw();$("testPre").textContent=buildReport()}
+ function fillSettings(){fillProp();drawClr();drawBuild();drawTz();drawShare();mountFeedback();fbDraw();$("testPre").textContent=buildReport()}
  ["fbDis","fbTxt"].forEach(function(id){$(id).addEventListener("input",function(){usage.fb=usage.fb||{};usage.fb[id]=$(id).value;try{localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){};$("testPre").textContent=buildReport()})});
  if(usage.fb){if(usage.fb.fbDis)$("fbDis").value=usage.fb.fbDis;if(usage.fb.fbTxt)$("fbTxt").value=usage.fb.fbTxt}
  $("shareRep").onclick=function(){
