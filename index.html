@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-u1lGvn2zFlGtDf3KocOzEfuT8nras8401VJyhuApC1U='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-3A+ZFSCH8YxPVW/ElZ6V7EM9wVF2E+EXeXnupQtE0RY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -223,7 +223,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 
 .pfchip{border-radius:12px;padding:10px 12px;font-weight:700;font-size:.9rem;margin:2px 0 10px}
-.rule{background:rgba(255,255,255,.04);border-radius:10px;padding:0 10px;margin:6px 0;color:var(--text);font-size:.92rem}.rule span{flex:1}.rulex{min-height:44px;min-width:44px;background:none;border:0;color:var(--mute);font-size:.75rem;text-decoration:underline}.ruleadd{display:flex;gap:8px;margin:10px 0}.ruleadd input{flex:1}
+.rule{background:rgba(255,255,255,.04);border-radius:10px;padding:0 10px;margin:6px 0;color:var(--text);font-size:.92rem}.rule span{flex:1;min-width:0;overflow-wrap:anywhere}.rvrow span{overflow-wrap:anywhere;min-width:0}.rulex{min-height:44px;min-width:44px;background:none;border:0;color:var(--mute);font-size:.75rem;text-decoration:underline}.ruleadd{display:flex;gap:8px;margin:10px 0}.ruleadd input{flex:1}
 .pf-green{background:#1f4d33;color:#d8f5e3;border:1px solid #2f7a52}.pf-amber{background:#5a4306;color:#ffe9a8;border:1px solid #a37c10}.pf-red{background:#6b1b1b;color:#ffd9d6;border:1px solid #b53a3a}
 /* Look: Black and champagne (v19) */
 html[data-look="champagne"]{--gold:#E6D3A8;--text:#f2ede3;--mute:#a39c8d;background:#000}
@@ -624,7 +624,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v26";
+var APP_V="v27";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -1070,7 +1070,7 @@ function saveSettings(){
  settings.bal=$("bal").value;settings.risk=$("risk").value;
  settings.contract[inst]=$("contract").value;
  settings.gLimit=$("gLimit").value;settings.gHour=$("gHour").value;
- try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}
+ try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){memOnly=true;var el=document.getElementById("storeNote");if(el)el.textContent=storeNoteText()}
 }
 function applyLook(){
  var v=settings&&settings.look==="champagne"?"champagne":"classic";
@@ -2034,6 +2034,9 @@ load();loadFavs();loadSettings();updateBtn();instChanged();setTab("size");applyS
 window.addEventListener("storage",function(ev){try{
  if(ev.key===JKEY){load();render()}
  else if(ev.key===PKEY){loadPlans();if(typeof drawPlan==="function")drawPlan()}
+else if(ev.key===SKEY&&ev.newValue){
+  /* another tab saved settings: take its prop and rules so this tab cannot overwrite them with old copies */
+  var o=JSON.parse(ev.newValue);if(o&&typeof o==="object"&&!Array.isArray(o)){settings.prop=cleanProp(o.prop);settings.rules=cleanRules(o.rules);if(typeof o.welcomed==="boolean")settings.welcomed=o.welcomed;fillProp();renderReview()}}
 }catch(e){}});
 
 (function(){
