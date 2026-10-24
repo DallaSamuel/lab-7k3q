@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-QCI49iEfXu/pHcdKJpDqff9ejlKu8DGWSJKs+dVbJXs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-kn6tbt6vrG43QMOqWP2+Wi3XPNNLc4CPJMW/iKBdFJw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -102,7 +102,7 @@ button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .more summary{list-style:none;cursor:pointer;color:var(--gold);font-weight:600;padding:8px 4px;min-height:40px;display:flex;align-items:center}.more summary::-webkit-details-marker{display:none}.more .mbox{display:flex;gap:4px;flex-wrap:wrap}
 .installhelp{font-size:.82rem;color:var(--mute);margin:8px 0}
 .scr.off{display:none}main{padding-bottom:118px}
-.bnav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),488px);display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:6px;background:rgba(14,15,18,.84);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(212,175,55,.38);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06);z-index:20}
+.bnav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),488px);display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:6px;background:rgba(14,15,18,.84);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(212,175,55,.38);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06);z-index:20}
 .bnav button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;padding:6px 2px 8px;border:0;border-radius:16px;background:transparent;color:var(--mute);font-family:inherit;font-size:.68rem;font-weight:600;line-height:1.1;cursor:pointer}
 .bnav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .bnav button[aria-current="page"]{color:var(--gold);background:rgba(212,175,55,.08)}
@@ -223,7 +223,19 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 
 
 .pfchip{border-radius:12px;padding:10px 12px;font-weight:700;font-size:.9rem;margin:2px 0 10px}
-.rule{background:rgba(255,255,255,.04);border-radius:10px;padding:0 10px;margin:6px 0;color:var(--text);font-size:.92rem}.rule span{flex:1;min-width:0;overflow-wrap:anywhere}.rvrow span{overflow-wrap:anywhere;min-width:0}.rulex{min-height:44px;min-width:44px;background:none;border:0;color:var(--mute);font-size:.75rem;text-decoration:underline}.ruleadd{display:flex;gap:8px;margin:10px 0}.ruleadd input{flex:1}
+.adv{margin-top:12px}.adv summary{min-height:44px;display:flex;align-items:center;color:var(--gold);font-weight:600;cursor:pointer}.pf-none{background:#26282d;color:#d9d9d9;border:1px solid #4a4d55}.rulesum{min-height:44px;display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700}.rulesum small{color:var(--mute);font-weight:500}
+.rule{background:rgba(255,255,255,.04);border-radius:10px;padding:0 10px;margin:6px 0;color:var(--text);font-size:.92rem}.rule span{flex:1;min-width:0;overflow-wrap:anywhere}.rvrow span{overflow-wrap:anywhere;min-width:0}.rulex{min-height:44px;min-width:44px;background:none;border:0;color:var(--mute);font-size:.75rem;text-decoration:underline}.ruleadd{display:flex;gap:8px;margin:10px 0;align-items:stretch}.ruleadd input{flex:1 1 0;width:auto;min-width:0}.ruleadd .btn{flex:none;width:auto;min-width:64px;margin-top:0;padding:0 14px}
+.pfform label{display:block;margin:14px 0 6px;color:var(--gold);font-size:.9rem}.pfform .chk{color:var(--mute)}.pfform .rule{margin:6px 0;color:var(--text,#f4f1e8)}.pfform h2{margin:4px 0 6px}
+.pfform input,.pfform select{background:#121214;border:1.5px solid rgba(212,175,55,.6);color:#f4f1e8}.pfform input:focus,.pfform select:focus{outline:2px solid #f7e08a;outline-offset:1px}
+.pfhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px}.pfpill{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border:1.5px solid rgba(212,175,55,.7);border-radius:999px;color:var(--gold);font-size:.82rem;font-weight:600;background:transparent}
+.pfbtn{min-height:44px;min-width:64px;padding:0 18px;border:1.5px solid rgba(212,175,55,.7);border-radius:999px;background:transparent;color:var(--gold);font:inherit;font-weight:700;cursor:pointer}
+.pfchips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}.pfchips button{min-height:48px;border-radius:999px;border:1.5px solid rgba(212,175,55,.6);background:#121214;color:var(--gold);font:inherit;font-weight:600;cursor:pointer}.pfchips button[aria-pressed="true"]{background:#d9b649;color:#121212;border-color:#d9b649}
+.pfh3{font-family:"Playfair Display",Georgia,serif;font-size:1.25rem;margin:18px 0 4px;color:var(--text,#f4f1e8)}.pfbar{height:10px;border-radius:99px;background:#3a3d45;overflow:hidden;margin:6px 0 14px}.pfbar i{display:block;height:100%;border-radius:99px;background:#22c55e}.pfbar i.amber{background:#d9b649}.pfbar i.red{background:#e0504f}
+.pfrow{display:flex;justify-content:space-between;gap:10px;font-size:.9rem}.pfrow b{text-align:right}.pftiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pftile{background:rgba(255,255,255,.04);border-radius:12px;padding:10px 12px;font-size:.78rem;color:var(--mute)}.pftile b{display:block;color:var(--text,#f4f1e8);font-size:.95rem;margin-top:3px}
+.pfcard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px;margin:12px 0}.pfbar+.pfrow{margin-top:0}
+.rseg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.rseg span{text-align:center;padding:12px 4px;border-radius:12px;background:#26282d;color:#7d8088;font-weight:600;font-size:.88rem}
+.rseg .on-green{background:#1f4d33;color:#d8f5e3}.rseg .on-amber{background:#4a3a10;color:#f0cf6a}.rseg .on-red{background:#5e1c1c;color:#ffc9c5}
+.pfmsg{border-radius:12px;padding:12px;margin-top:6px;font-size:.88rem}.pfmsg b{display:block;font-size:.98rem;margin-top:2px}.pfmsg.green{background:#17341f;color:#cdeed9}.pfmsg.amber{background:#3a2e0e;color:#e8c764}.pfmsg.red{background:#4a1818;color:#ffcfcb}.pfmsg.none{background:#26282d;color:#c9cbd2}
 .pf-green{background:#1f4d33;color:#d8f5e3;border:1px solid #2f7a52}.pf-amber{background:#5a4306;color:#ffe9a8;border:1px solid #a37c10}.pf-red{background:#6b1b1b;color:#ffd9d6;border:1px solid #b53a3a}
 /* Look: Black and champagne (v19) */
 html[data-look="champagne"]{--gold:#E6D3A8;--text:#f2ede3;--mute:#a39c8d;background:#000}
@@ -256,7 +268,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <div class="scr" id="scr_calc">
 <div class="brand"><svg class="logo" viewBox="0 0 512 512" width="52" height="52" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7e08a"/><stop offset=".55" stop-color="#D4AF37"/><stop offset="1" stop-color="#a88220"/></linearGradient></defs><g fill="none" stroke="url(#lg)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"><path d="M112 190V112h78M322 112h78v78M400 322v78h-78M190 400h-78v-78"/></g><g fill="url(#lg)" stroke="url(#lg)" stroke-width="12" stroke-linecap="round"><path d="M196 226v92M256 196v128M316 168v108"/><rect x="180" y="248" width="32" height="48" rx="4" stroke="none"/><rect x="240" y="222" width="32" height="74" rx="4" stroke="none"/><rect x="300" y="188" width="32" height="64" rx="4" stroke="none"/></g></svg><div><div class="eyebrow" id="brandName">PIPFRAME</div><h1>Trade Calculator</h1></div></div>
 <p class="sub">Size it, target it, measure it, then journal it.</p>
-<div class="welcome" id="pilot" role="region" aria-label="Join the test" hidden><h2>Help test PipFrame</h2><p class="wtxt">If you say yes, the app quietly shares how you use it, so the people building it can see what works and what confuses you. No sign-up and it works in the background.</p><p class="wtxt"><b>Shared:</b> your phone type and time zone, when and how long you use it, which buttons you press, the mistakes the app catches (like a stop loss on the wrong side), and how many trades you win, lose and grade.<br><b>Never shared:</b> prices, balances, profit or loss amounts, lot sizes, notes, reasons, names, your location or your internet address.</p><p class="wtxt">You can switch it off any time in Settings, and that deletes what was waiting to be sent.</p><div class="btnrow"><button class="btn" id="pilotYes" type="button">Yes, join the test</button><button class="btn ghost" id="pilotNo" type="button">No thanks</button></div></div>
+<div class="welcome" id="pilot" role="region" aria-label="Join the test" hidden><h2>Help test PipFrame</h2><p class="wtxt">If you say yes, the app quietly shares how you use it, so the people building it can see what works and what confuses you. No sign-up and it works in the background.</p><p class="wtxt"><b>Shared:</b> your phone type and time zone, when and how long you use it, which buttons you press, the mistakes the app catches (like a stop loss on the wrong side), and how many trades you win, lose and grade.<br><b>Never shared:</b> prices, balances, profit or loss amounts, lot sizes, notes, reasons, names, your exact location or your internet address.</p><p class="wtxt">You can switch it off any time in Settings, and that deletes what was waiting to be sent.</p><div class="btnrow"><button class="btn" id="pilotYes" type="button">Yes, join the test</button><button class="btn ghost" id="pilotNo" type="button">No thanks</button></div></div>
 <div class="welcome" id="welcome" hidden><h2>Welcome</h2><p class="wtxt">Size a trade, check your setup, log it, and see how you really trade. A one-minute tour shows where everything is.</p><div class="btnrow"><button class="btn" id="tourGo" type="button">Take the tour</button><button class="btn ghost" id="welcomeOk" type="button">Skip</button></div></div>
 
 <div class="tabs" id="tabs" role="tablist" aria-label="Calculator type">
@@ -395,6 +407,9 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <p class="note" id="storeNote"></p>
 </section>
 </div>
+<div class="scr off" id="scr_prop">
+<section class="panel pfform" id="propPanel" aria-label="Prop firm tracker"><div id="propBody"></div></section>
+</div>
 <div class="scr off" id="scr_review">
 <section class="panel" id="reviewPanel" aria-label="Review"><div class="head"><h2>Review</h2></div><div id="reviewBody"></div></section>
 </div>
@@ -416,24 +431,6 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <section class="panel" aria-label="Look"><div class="head"><h2>Look</h2></div>
 <p class="note">Pick the colours you like. Your trades are not touched.</p>
 <label for="lookSel">Colours</label><select id="lookSel"><option value="classic">Black and gold (original)</option><option value="champagne">Black and champagne</option></select></section>
-<section class="panel" id="propPanel" aria-label="Prop firm account"><div class="head"><h2>Prop firm account</h2></div>
-<p class="note">Track a funded or challenge account against its rules. It reads the trades you close in the journal, and nothing leaves your phone.</p>
-<label class="chk" for="pfOn"><input type="checkbox" id="pfOn"> Track a prop firm account</label>
-<div id="pfFields" hidden>
-<label for="pfFirm">Prop firm name</label><input id="pfFirm" type="text" maxlength="40" placeholder="e.g. FTMO, Goat, FundedNext" autocomplete="off">
-<label for="pfType">Account type</label><select id="pfType"><option value="instant">Instant</option><option value="one">One-step</option><option value="two">Two-step</option></select>
-<div class="two"><div><label for="pfSize">Account size ($)</label><input id="pfSize" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 10000"></div>
-<div><label for="pfStart">Started on</label><input id="pfStart" type="date"></div></div>
-<div class="two"><div><label for="pfDaily">Max daily loss (%)</label><input id="pfDaily" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 5"></div>
-<div><label for="pfMax">Max overall loss (%)</label><input id="pfMax" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 10"></div></div>
-<label for="pfDailyBase">Daily loss is measured from</label><select id="pfDailyBase"><option value="size">The account size</option><option value="day">The balance at the start of the day</option></select>
-<label for="pfMaxType">Max loss works as</label><select id="pfMaxType"><option value="static">Fixed (from the account size)</option><option value="trailing">Trailing (from the highest balance)</option></select>
-<div class="two"><div><label for="pfTarget">Profit target (%)</label><input id="pfTarget" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 8"></div>
-<div><label for="pfDays">Minimum trading days</label><input id="pfDays" type="number" inputmode="numeric" min="0" step="1" placeholder="e.g. 5"></div></div>
-<div class="two"><div><label for="pfRisk">Risk per trade (%)</label><input id="pfRisk" type="number" inputmode="decimal" min="0" step="any" placeholder="e.g. 0.5"></div>
-<div><label for="pfStop">Stop after this many losses a day</label><input id="pfStop" type="number" inputmode="numeric" min="0" step="1" placeholder="0 = off"></div></div>
-<p class="note">Uses closed trades only. Open trades and floating losses are not counted. Firms count loss in different ways, so check your firm's rules. This is information, not advice.</p>
-</div></section>
 <section class="panel" aria-label="Time"><div class="head"><h2>Time</h2></div>
 <p class="note">Times in your journal follow this setting. Your device clock is not changed, and your saved trades are not touched.</p>
 <label for="tzSel">Times shown in</label><select id="tzSel"></select>
@@ -443,10 +440,10 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <div class="btnrow"><button class="btn ghost" id="demoAdd" type="button">Add demo</button><button class="btn ghost" id="demoDel" type="button">Remove demo</button></div>
 <p class="note" id="demoNote"></p></section>
 <section class="panel" aria-label="How to test"><div class="head"><h2>How to test</h2></div>
-<ol class="howto"><li>Size a trade: enter a balance, risk, entry and stop loss, then tap Calculate.</li><li>Log it, then open the Journal and add an exit price.</li><li>Fix a mistake with Edit, and try Undo after a delete.</li><li>Add demo trades above and open Review.</li><li>Install the app, turn on airplane mode, and open it again.</li><li>Tell us anything confusing, missing or wrong in Help us test below.</li></ol>
+<ol class="howto"><li>Size a trade: enter a balance, risk, entry and stop loss, then tap Calculate.</li><li>Log it, then open the Journal and add an exit price.</li><li>Fix a mistake with Edit, and try Undo after a delete.</li><li>Add demo trades above and open Review.</li><li>Install the app, turn on airplane mode, and open it again.</li><li>Tell us anything confusing, missing or wrong in Help us test below.</li><li>Open the Prop tab, enter your firm's rules, then tick your rules for the day.</li></ol>
 <p class="note">PipFrame is a calculation tool, not advice. Please do not enter anything you would not want on your own device.</p></section>
 <section class="panel" id="sharePanel" aria-label="Help improve PipFrame" hidden><div class="head"><h2>Help improve PipFrame</h2></div>
-<p class="note">Off by default. If you switch it on, the app sends a small summary when you open it (at most a few times a day): your phone type and time zone, the time on your clock, how long you actively used the app, simple counts, and a list of which screens and buttons you used with the time. It never sends what you type or see: no prices, balances, profit or loss, lot sizes, notes, reasons or names. It does not send your location or your internet address. Switch it off any time.</p>
+<p class="note">Off by default. If you switch it on, the app sends a small summary when you open it (at most a few times a day): your phone type and time zone, the time on your clock, how long you actively used the app, simple counts, and a list of which screens and buttons you used with the time. It never sends what you type or see: no prices, balances, profit or loss, lot sizes, notes, reasons or names. It does not send your exact location or your internet address. Switch it off any time.</p>
 <label class="chk" for="shareOn"><input type="checkbox" id="shareOn"> Send anonymous usage counts</label>
 <p class="note">This is exactly what would be sent:</p>
 <div class="testpre" id="sharePre" aria-label="What would be sent"></div>
@@ -459,7 +456,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <div class="btnrow"><button class="btn" id="fbSend" type="button">Send feedback</button></div>
 <p class="note" id="fbNote" role="status"></p></div></section>
 <section class="panel" id="testPanel" aria-label="Help us test"><div class="head"><h2>Help us test</h2></div>
-<p class="note">Nothing is sent automatically. This makes a short report of how you used the app. Read it, add your thoughts, and send it to whoever gave you the app.</p>
+<p class="note">This makes a short report of how you used the app on this device. Read it, add your thoughts, and send it to whoever gave you the app.</p>
 <div id="fbWrap"><label for="fbDis">How would you feel if this app disappeared tomorrow?</label>
 <select id="fbDis"><option value="">Choose one</option><option>Very disappointed</option><option>Somewhat disappointed</option><option>Not disappointed</option></select>
 <label for="fbTxt" style="margin-top:10px">What was confusing, missing, or great?</label>
@@ -468,7 +465,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <button class="btn" id="shareRep" type="button">Share test report</button>
 <p class="note" id="repNote"></p>
 </section>
-<details class="about"><summary>About, privacy and your data</summary><p>Everything you enter stays on this device, in this browser. There is no account, no tracking and no server copy.</p><p>Back up often from Settings, because clearing browser data deletes the journal. To remove everything, use Delete all trades in Settings.</p><p>Shared cards are made on your device and only go where you send them.</p><p id="aboutShare" hidden>Settings has a Help improve PipFrame switch. It is off until you turn it on, and it only sends the summary shown there.</p></details>
+<details class="about"><summary>About, privacy and your data</summary><p>Everything you enter stays on this device, in this browser. There is no account and no server copy of your journal.</p><p>Back up often from Settings, because clearing browser data deletes the journal. To remove everything, use Delete all trades in Settings.</p><p>Shared cards are made on your device and only go where you send them.</p><p id="aboutShare" hidden>If you join the test, the app also sends anonymous usage numbers while you use it. You can read exactly what is sent in Settings under Help improve PipFrame, and switch it off any time. It never sends your trades, prices, balances or notes.</p></details>
 </div>
 <p class="buildline" id="buildLine"></p>
 <p class="disclaimer">THIS IS A CALCULATION TOOL, NOT FINANCIAL ADVICE. YOU ARE RESPONSIBLE FOR YOUR OWN TRADING DECISIONS AND RISKS.</p>
@@ -476,6 +473,7 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 <div class="tour" id="tour" hidden role="dialog" aria-label="Quick tour"><div class="tstep" id="tStep"></div><h3 id="tTitle"></h3><p id="tText"></p><div class="trow"><button class="link" id="tSkip" type="button">Skip</button><span class="tbtns"><button class="link" id="tBack" type="button">Back</button><button class="btn" id="tNext" type="button">Next</button></span></div></div>
 <div class="toast" id="toast" hidden role="status"><span id="toastTxt"></span><button class="link" id="toastGo" type="button"></button></div>
 <nav class="bnav" id="bnav" aria-label="Sections">
+<button type="button" id="nav_prop" data-go="prop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg><span>Prop</span></button>
 <button type="button" id="nav_calc" data-go="calc" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16M17 6v13"/><rect x="5" y="8" width="4" height="7" rx="1"/><rect x="15" y="10" width="4" height="6" rx="1"/></svg><span>Calculate</span></button>
 <button type="button" id="nav_journal" data-go="journal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h11a1 1 0 0 1 1 1v15H7a1 1 0 0 1-1-1z"/><path d="M9 9h6M9 13h6"/></svg><span>Journal</span><b class="nbadge" id="jbadge" hidden></b></button>
 <button type="button" id="nav_review" data-go="review"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-6"/></svg><span>Review</span></button>
@@ -624,7 +622,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v28";
+var APP_V="v34";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -1805,8 +1803,8 @@ function cleanProp(o){
  o=o&&typeof o==="object"&&!Array.isArray(o)?o:{};
  function pn(v,max,dflt){v=Number(v);return isFinite(v)&&v>=0?Math.min(v,max):dflt}
  var st=typeof o.start==="string"&&/^\d{4}-\d\d-\d\d$/.test(o.start)&&isFinite(Date.parse(o.start))?o.start:"";
- return {on:o.on===true,firm:typeof o.firm==="string"?o.firm.replace(/[\u0000-\u001F]/g,"").slice(0,40):"",
-  type:["instant","one","two"].indexOf(o.type)>-1?o.type:"two",size:pn(o.size,1e9,0),daily:pn(o.daily,100,0),max:pn(o.max,100,0),
+ return {on:o.on===true,live:o.live===true,firm:typeof o.firm==="string"?o.firm.replace(/[\u0000-\u001F]/g,"").slice(0,40):"",
+  type:["instant","one","two"].indexOf(o.type)>-1?o.type:"instant",size:pn(o.size,1e9,0),daily:pn(o.daily,100,0),max:pn(o.max,100,0),
   dailyBase:o.dailyBase==="day"?"day":"size",maxType:o.maxType==="trailing"?"trailing":"static",target:pn(o.target,1000,0),
   days:Math.floor(pn(o.days,365,0)),risk:pn(o.risk,100,0.5),stop:Math.floor(pn(o.stop,50,0)),start:st};
 }
@@ -1834,29 +1832,6 @@ function ruleList(){
  var out=DEF_RULES.map(function(d){return {id:d[0],t:d[1].replace("{R}",String(R)).replace("{L}",String(L)),def:true}});
  ((settings.rules||cleanRules(null)).custom).forEach(function(c){out.push({id:c.id,t:c.t,def:false})});
  return out;
-}
-function renderRulesCard(box){
- var st=settings.rules=cleanRules(settings.rules),day=ruleDay(Date.now()),list=ruleList(),ticked=st.ticks[day]||[];
- var s=h("div","rv");s.id="rulesCard";s.appendChild(h("div","rvt","My rules for the day"));
- s.appendChild(h("p","note","Tick each rule you have confirmed before you trade. Ticks reset every day and stay on this phone."));
- function save(){settings.rules=cleanRules(st);saveSettings();renderReview()}
- list.forEach(function(r){
-  var l=h("label","chk rule"),i=document.createElement("input");i.type="checkbox";i.checked=ticked.indexOf(r.id)>-1;
-  i.addEventListener("change",function(){var cur=(st.ticks[day]||[]).filter(function(x){return x!==r.id});if(i.checked)cur.push(r.id);if(cur.length)st.ticks[day]=cur;else delete st.ticks[day];save()});
-  l.appendChild(i);l.appendChild(h("span",null,r.t));
-  if(!r.def){var x=h("button","rulex","Remove");x.type="button";x.setAttribute("aria-label","Remove rule: "+r.t);x.addEventListener("click",function(ev){ev.preventDefault();st.custom=st.custom.filter(function(c){return c.id!==r.id});save()});l.appendChild(x)}
-  s.appendChild(l)});
- var add=h("div","ruleadd"),inp=document.createElement("input");inp.type="text";inp.maxLength=80;inp.id="ruleNew";inp.placeholder="Type your custom rule here";inp.setAttribute("aria-label","New custom rule");
- var btn=h("button","btn ghost","Add");btn.type="button";btn.id="ruleAdd";
- function doAdd(){var t=inp.value.replace(/[\u0000-\u001F]/g,"").trim().slice(0,80);if(!t||st.custom.length>=12)return;st.custom.push({id:"c"+Date.now(),t:t});save()}
- btn.addEventListener("click",doAdd);inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();doAdd()}});
- add.appendChild(inp);add.appendChild(btn);s.appendChild(add);
- var tot=list.length,done=list.filter(function(r){return ticked.indexOf(r.id)>-1}).length,miss=tot-done;
- var status=miss===0?"green":miss<=2?"amber":"red";
- var msg=miss===0?"GREEN. All "+tot+" rules confirmed. Trade your plan.":(status==="amber"?"AMBER. ":"RED. ")+done+" of "+tot+" rules ticked. "+miss+(miss===1?" rule is":" rules are")+" not confirmed. Check before you trade.";
- var chip=h("div","pfchip pf-"+status,msg);chip.id="rulesChip";chip.setAttribute("role","status");s.appendChild(chip);
- s.appendChild(h("p","note","Green is all ticked, amber is one or two missing, red is three or more missing. These cut-offs are a starting guess you can change later. Information only, not advice."));
- box.appendChild(s);
 }
 function propCalc(now){
  var P=settings&&settings.prop;if(!P||!P.on||!(P.size>0))return null;
@@ -1894,40 +1869,115 @@ function drawProp(){
  nb.textContent="Prop firm"+(c.P.firm?" ("+c.P.firm+")":"")+": "+m.join(" ");
  nb.className="plannote"+(warn?" warn":"");nb.hidden=false;
 }
-function renderPropCard(box){
- var c=propCalc(Date.now());if(!c)return;
- var P=c.P,s=h("div","rv");
- s.appendChild(h("div","rvt","Prop firm: "+(P.firm||"my account")+" ("+{instant:"Instant",one:"One-step",two:"Two-step"}[P.type]+")"));
- var chip=h("div","pfchip pf-"+c.status,{green:"GREEN. You are inside your rules.",amber:"AMBER. Careful: "+c.why.join(", ")+".",red:"RED. "+c.why.join(", ")+"."}[c.status]);chip.setAttribute("role","status");s.appendChild(chip);
- function row(a,b){var r=h("div","rvrow");r.appendChild(h("span",null,a));r.appendChild(h("span",null,b));s.appendChild(r)}
- row("Balance (closed trades)",usd(c.bal)+" of "+usd(P.size));
- row("Today",money(c.todayPnl));
- if(P.daily>0)row("Daily loss used",usd(c.dUsed)+" of "+usd(c.dLimit)+" ("+Math.round(c.dPct*100)+"%), "+usd(c.dRemain)+" left");
- if(P.max>0)row("Max loss used",Math.round(c.mUsed*100)+"% of "+usd(c.mAllowed)+" (floor "+usd(c.floor)+(P.maxType==="trailing"?", trailing":"")+")");
- if(P.target>0)row("Profit target",Math.min(100,Math.round(c.prog*100))+"% of "+usd(c.tAmt));
- if(P.days>0)row("Trading days",c.nDays+" of "+P.days+(c.nDays>=P.days?" (done)":""));
- if(P.risk>0)row("Risk per trade cap",P.risk+"% = "+usd(c.capUsd));
- if(P.stop>0)row("Losses today",c.lossesToday+" (stop after "+P.stop+")");
- s.appendChild(h("p","note","Counts closed trades only, not open ones. Firms count loss in different ways, so check yours. Information only, not advice."));
+var propEdit=false;
+function usd0(v){return "$"+n(v,v%1===0?0:2)}
+function field(wrap,id,label,ph,val,mode,suffix){
+ var l=h("label",null,label);l.setAttribute("for",id);var i=document.createElement("input");i.id=id;i.type="number";i.inputMode=mode||"decimal";i.min="0";i.step="any";i.placeholder=ph;if(val)i.value=val;wrap.appendChild(l);wrap.appendChild(i);return i}
+function renderProp(){
+ var box=$("propBody");if(!box)return;box.innerHTML="";
+ var P=settings.prop=cleanProp(settings.prop),configured=P.on&&P.size>0;
+ if(propEdit||(!configured&&!P.live))renderPropSetup(box,P,configured||P.live);else renderPropToday(box,P,configured);
+}
+function renderPropSetup(box,P,editing){
+ var hd=h("div","pfhead");
+ if(editing){var cb=h("button","pfbtn","← Cancel");cb.type="button";cb.id="pfCancel";cb.addEventListener("click",function(){propEdit=false;renderProp()});hd.appendChild(cb)}
+ else{var pill=h("span","pfpill","Step 1 of 2");pill.id="pfPill";hd.appendChild(pill)}
+ box.appendChild(hd);
+ box.appendChild(h("h2",null,editing?"Edit setup":"Prop Firm Details"));
+ var typ=P.type||"two";
+ var l1=h("label",null,"Prop Firm Name");l1.setAttribute("for","pfFirm");box.appendChild(l1);
+ var fi=document.createElement("input");fi.id="pfFirm";fi.type="text";fi.maxLength=40;fi.placeholder="e.g. FTMO, Goat, FundedNext";fi.autocomplete="off";fi.value=P.firm||"";box.appendChild(fi);
+ box.appendChild(h("label",null,"Account Type"));
+ var chips=h("div","pfchips");chips.setAttribute("role","group");chips.setAttribute("aria-label","Account type");
+ [["instant","Instant"],["one","One-Step"],["two","Two-Step"]].forEach(function(t){var b=h("button",null,t[1]);b.type="button";b.dataset.type=t[0];b.setAttribute("aria-pressed",typ===t[0]?"true":"false");b.addEventListener("click",function(){typ=t[0];chips.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.type===typ?"true":"false")})});chips.appendChild(b)});
+ box.appendChild(chips);
+ var wrap=h("div");box.appendChild(wrap);
+ field(wrap,"pfSize","Account Size ($)","e.g. 10,000",P.size||"");
+ wrap.appendChild(h("h3","pfh3","Prop Firm Rules"));
+ field(wrap,"pfDaily","Maximum Daily Loss Limit (%)","e.g. 5",P.daily||"");
+ field(wrap,"pfMax","Overall / Max Loss Limit (%)","e.g. 10",P.max||"");
+ field(wrap,"pfDays","Minimum Trading Days","e.g. 5",P.days||"","numeric");
+ field(wrap,"pfTarget","Profit Target (%)","e.g. 8",P.target||"");
+ var det=document.createElement("details");det.className="adv";det.appendChild(h("summary",null,"More rules (optional)"));
+ det.open=!!(P.start||P.dailyBase==="day"||P.maxType==="trailing"||P.stop);
+ field(det,"pfStart","Challenge started on","",P.start||"").type="date";
+ var l2=h("label",null,"Daily loss is measured from (the account size, or the balance at the start of the day)");l2.setAttribute("for","pfDailyBase");det.appendChild(l2);
+ var sb=document.createElement("select");sb.id="pfDailyBase";[["size","Account size"],["day","Start-of-day balance"]].forEach(function(o){var op=h("option",null,o[1]);op.value=o[0];sb.appendChild(op)});sb.value=P.dailyBase;det.appendChild(sb);
+ var l3=h("label",null,"Max loss works as (fixed from the account size, or trailing from your highest balance)");l3.setAttribute("for","pfMaxType");det.appendChild(l3);
+ var sm=document.createElement("select");sm.id="pfMaxType";[["static","Fixed"],["trailing","Trailing"]].forEach(function(o){var op=h("option",null,o[1]);op.value=o[0];sm.appendChild(op)});sm.value=P.maxType;det.appendChild(sm);
+ field(det,"pfRisk","Risk per trade (%)","e.g. 0.5",P.risk);
+ field(det,"pfStop","Stop after this many losses a day","0 = off",P.stop||"","numeric");
+ box.appendChild(det);
+ var err=h("p","err");err.id="pfErr";err.setAttribute("role","alert");box.appendChild(err);
+ var go=h("button","btn",editing?"Save changes":"Continue");go.type="button";go.id="pfContinue";
+ go.addEventListener("click",function(){
+  var g=function(id){return $(id).value};
+  var np=cleanProp({on:true,live:false,firm:g("pfFirm"),type:typ,size:g("pfSize"),start:g("pfStart"),daily:g("pfDaily"),max:g("pfMax"),dailyBase:g("pfDailyBase"),maxType:g("pfMaxType"),target:g("pfTarget"),days:g("pfDays"),risk:g("pfRisk")===""?0.5:g("pfRisk"),stop:g("pfStop")});
+  if(!(np.size>0)){err.textContent="Enter your account size so the limits can be worked out in dollars.";$("pfSize").focus();return}
+  err.textContent="";settings.prop=np;saveSettings();propEdit=false;renderProp();window.scrollTo(0,0)});
+ box.appendChild(go);
+ if(!editing){var lv=h("button","btn ghost","I trade a live account (no firm limits)");lv.type="button";lv.id="pfLive";lv.addEventListener("click",function(){settings.prop=cleanProp({live:true});saveSettings();propEdit=false;renderProp()});box.appendChild(lv)}
+ box.appendChild(h("p","note","Saved only on this phone. It reads the trades you close in the journal. Information only, not advice."));
+}
+function ruleBlock(box,stateHost){
+ var st=settings.rules=cleanRules(settings.rules),day=ruleDay(Date.now()),list=ruleList(),ticked=st.ticks[day]||[];
+ var s=h("div","pfcard");s.id="rulesCard";
+ var tot=list.length,done=list.filter(function(r){return ticked.indexOf(r.id)>-1}).length,miss=tot-done;
+ s.appendChild(h("h3","pfh3","My rules for the day"));
+ s.appendChild(h("p","note",done+" of "+tot+" ticked. Tap a rule to tick it. The result below updates."));
+ function save(){settings.rules=cleanRules(st);saveSettings();renderProp()}
+ list.forEach(function(r){
+  var l=h("label","chk rule"),i=document.createElement("input");i.type="checkbox";i.checked=ticked.indexOf(r.id)>-1;
+  i.addEventListener("change",function(){var cur=(st.ticks[day]||[]).filter(function(x){return x!==r.id});if(i.checked)cur.push(r.id);if(cur.length)st.ticks[day]=cur;else delete st.ticks[day];save()});
+  l.appendChild(i);l.appendChild(h("span",null,r.t));
+  if(!r.def){var x=h("button","rulex","Remove");x.type="button";x.setAttribute("aria-label","Remove rule: "+r.t);x.addEventListener("click",function(ev){ev.preventDefault();st.custom=st.custom.filter(function(c){return c.id!==r.id});save()});l.appendChild(x)}
+  s.appendChild(l)});
+ var add=h("div","ruleadd"),inp=document.createElement("input");inp.type="text";inp.maxLength=80;inp.id="ruleNew";inp.placeholder="Type your own rule";inp.setAttribute("aria-label","New custom rule");
+ var btn=h("button","btn ghost","Add");btn.type="button";btn.id="ruleAdd";
+ function doAdd(){var t=inp.value.replace(/[\u0000-\u001F]/g,"").trim().slice(0,80);if(!t||st.custom.length>=12)return;st.custom.push({id:"c"+Date.now(),t:t});save()}
+ btn.addEventListener("click",doAdd);inp.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();doAdd()}});
+ add.appendChild(inp);add.appendChild(btn);s.appendChild(add);
  box.appendChild(s);
+ var status=done===0?"none":miss===0?"green":miss<=2?"amber":"red";
+ var r=h("div","pfcard");r.appendChild(h("h3","pfh3","Result"));
+ var seg=h("div","rseg");[["green","Green"],["amber","Amber"],["red","Red"]].forEach(function(o){seg.appendChild(h("span",status===o[0]?"on-"+o[0]:null,o[1]))});r.appendChild(seg);
+ var rule=function(k){return k+(k===1?" rule":" rules")};
+ var m1=done===0?"Not started":done+" of "+tot+" rules ticked",m2=done===0?"Tick each rule once you have confirmed it, before you trade.":miss===0?"All "+rule(tot)+" ticked. Trade your plan.":rule(miss)+" not ticked. Check before you trade.";
+ var chip=h("div","pfmsg "+status);chip.id="rulesChip";chip.setAttribute("role","status");chip.appendChild(h("span",null,m1));chip.appendChild(h("b",null,m2));r.appendChild(chip);
+ r.appendChild(h("p","note","Green is all ticked, amber is one or two missing, red is three or more missing. Ticks reset every new day."));
+ box.appendChild(r);
 }
-function fillProp(){
- var P=(settings&&settings.prop)||cleanProp(null);
- var set=function(id,v){var e=$(id);if(e)e.value=v};
- $("pfOn").checked=P.on;$("pfFields").hidden=!P.on;
- set("pfFirm",P.firm);set("pfType",P.type);set("pfSize",P.size||"");set("pfStart",P.start);set("pfDaily",P.daily||"");set("pfMax",P.max||"");
- set("pfDailyBase",P.dailyBase);set("pfMaxType",P.maxType);set("pfTarget",P.target||"");set("pfDays",P.days||"");set("pfRisk",P.risk);set("pfStop",P.stop||"");
+function renderPropToday(box,P,configured){
+ var hd=h("div","pfhead");var pill=h("span","pfpill","Step 2 of 2");hd.appendChild(pill);
+ var eb=h("button","pfbtn","Edit");eb.type="button";eb.id="pfEdit";eb.addEventListener("click",function(){propEdit=true;renderProp();window.scrollTo(0,0)});hd.appendChild(eb);box.appendChild(hd);
+ box.appendChild(h("h2",null,"Prop Firm Tracker"));
+ var c=configured?propCalc(Date.now()):null;
+ var typeName={instant:"Instant",one:"One-Step",two:"Two-Step"}[P.type];
+ var bar=h("div","pfcard");bar.id="pfFirmBar";bar.textContent=configured?(P.firm||"My prop firm")+" · "+typeName+" · "+usd0(P.size):"Live account · day rules only (tap Edit to add firm limits)";box.appendChild(bar);
+ if(c){
+  var card=h("div","pfcard");card.id="pfNumbers";card.appendChild(h("h3","pfh3","Today’s numbers"));card.appendChild(h("p","note","Worked out from your account setup, using closed trades."));
+  function prog(label,val,of,frac,cls){var r=h("div","pfrow");r.appendChild(h("span",null,label));r.appendChild(h("b",null,val+" of "+of));card.appendChild(r);var b=h("div","pfbar"),i=document.createElement("i");i.style.width=Math.max(0,Math.min(100,frac*100))+"%";if(cls)i.className=cls;b.appendChild(i);card.appendChild(b)}
+  var lv=function(f){return f>=1?"red":f>=0.6?"amber":""};
+  if(P.daily>0)prog("Daily loss used",usd0(c.dUsed),usd0(c.dLimit),c.dPct,lv(c.dPct));
+  if(P.max>0)prog("Max loss used",usd0(c.mUsed*c.mAllowed),usd0(c.mAllowed),c.mUsed,lv(c.mUsed));
+  if(P.target>0)prog("Profit target",usd0(Math.max(0,c.bal-P.size)),usd0(c.tAmt),c.prog,"amber");
+  var tl=h("div","pftiles");
+  function tile(a,b){var t=h("div","pftile",a);t.appendChild(h("b",null,b));tl.appendChild(t)}
+  if(P.risk>0)tile("Risk per trade",usd0(c.capUsd)+" max ("+P.risk+"%)");
+  if(P.days>0)tile("Trading days",c.nDays+" of "+P.days+" min");
+  if(P.stop>0)tile("Losses today",c.lossesToday+" (stop at "+P.stop+")");
+  tile("Balance (closed trades)",usd0(c.bal));
+  card.appendChild(tl);
+  var chip=h("div","pfmsg "+c.status,{green:"Inside your limits.",amber:"Careful: "+c.why.join(", ")+".",red:c.why.join(", ")+"."}[c.status]);chip.id="pfStatus";chip.setAttribute("role","status");chip.style.marginTop="12px";card.appendChild(chip);
+  box.appendChild(card);
+ }
+ ruleBlock(box);
+ box.appendChild(h("p","note","Counts closed trades only, not open ones. Firms count loss in different ways, so check yours. This is a calculation tool, not advice."));
 }
-function readProp(){
- var g=function(id){return $(id).value};
- settings.prop=cleanProp({on:$("pfOn").checked,firm:g("pfFirm"),type:g("pfType"),size:g("pfSize"),start:g("pfStart"),daily:g("pfDaily"),max:g("pfMax"),dailyBase:g("pfDailyBase"),maxType:g("pfMaxType"),target:g("pfTarget"),days:g("pfDays"),risk:g("pfRisk")===""?0.5:g("pfRisk"),stop:g("pfStop")});
- $("pfFields").hidden=!settings.prop.on;saveSettings();renderReview();
-}
-["pfOn","pfFirm","pfType","pfSize","pfStart","pfDaily","pfMax","pfDailyBase","pfMaxType","pfTarget","pfDays","pfRisk","pfStop"].forEach(function(id){var e=$(id);if(e)e.addEventListener(id==="pfOn"||e.tagName==="SELECT"?"change":"input",readProp)});
+function fillProp(){var b=$("propBody"),sc=$("scr_prop");if(b&&sc&&!sc.classList.contains("off"))renderProp()}
 function renderReview(){
  var box=$("reviewBody");if(!box)return;box.innerHTML="";
  var closed=entries.filter(isClosed);
- renderPropCard(box);renderRulesCard(box);
  var intro=h("p","note","Counts only trades with an exit price. A percentage appears once a group has "+MIN_PCT+" closed trades; before that you see plain counts.");
  box.appendChild(intro);
  if(closed.length<MIN_PCT){var meter=h("div","meter"),bar=h("i");bar.style.width=Math.min(100,closed.length/MIN_PCT*100)+"%";meter.appendChild(bar);box.appendChild(meter);
@@ -2042,7 +2092,7 @@ else if(ev.key===SKEY&&ev.newValue){
 (function(){
  var w=$("welcome");$("hideMoney").checked=hideMoney();
  if(w&&!settings.welcomed&&!entries.length){w.hidden=false}
- if(w)$("welcomeOk").onclick=function(){w.hidden=true;settings.welcomed=true;try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}};
+ if(w)$("welcomeOk").onclick=function(){w.hidden=true;if(window.__pilotShow)window.__pilotShow();settings.welcomed=true;try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}};
  var dp=null,ib=$("installBtn"),ih=$("installHelp"),ir=ib.parentNode;
  function standalone(){return (window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true}
  if(standalone())ir.hidden=true;
@@ -2075,14 +2125,19 @@ else if(ev.key===SKEY&&ev.newValue){
   usage=cu}}catch(e){}
  if(!usage.first){usage.first=new Date().toISOString()}
  usage.days[new Date().toISOString().slice(0,10)]=1;try{localStorage.setItem(UKEY,JSON.stringify(usage))}catch(e){}
- var NAMES=["calc","journal","review","settings"],cur="calc";
- function go(n){
-  if(NAMES.indexOf(n)<0)n="calc";cur=n;
+ var NAMES=["prop","calc","journal","review","settings"],cur="calc";
+ function go(n,fromPop){
+  var prev=cur;if(NAMES.indexOf(n)<0)n="calc";cur=n;
+  /* v31: each screen is a history step, so the phone Back button returns to the last screen instead of closing the app */
+  if(!fromPop&&prev&&prev!==n){try{history.pushState({t:n},"")}catch(e){}}
   NAMES.forEach(function(k){$("scr_"+k).classList.toggle("off",k!==n);var b=$("nav_"+k);if(k===n){if(b.getAttribute("aria-current")!=="page"){b.classList.remove("just");void b.offsetWidth;b.classList.add("just")}b.setAttribute("aria-current","page")}else b.removeAttribute("aria-current")});
   if(n==="settings")fillSettings();
+  if(n==="prop"){propEdit=false;renderProp()}
   window.scrollTo(0,0);bump("v_"+n);var tt0=$("toast");if(tt0&&!tt0.hidden&&!window.__keepToast)tt0.hidden=true;
  }
  NAMES.forEach(function(k){$("nav_"+k).onclick=function(){go(k)}});
+ try{history.replaceState({t:cur||"calc"},"")}catch(e){}
+ window.addEventListener("popstate",function(ev){var t=ev.state&&ev.state.t;if(t&&NAMES.indexOf(t)>-1&&t!==cur)go(t,true)});
  window.__navRefresh=function(){
   var open=entries.filter(function(t){return !t.result||t.result.outcome==="open"}).length,b=$("jbadge");
   b.hidden=!open;b.textContent=open>99?"99+":open;
@@ -2205,7 +2260,7 @@ else if(ev.key===SKEY&&ev.newValue){
  function curSess(){return sess.length?sess[sess.length-1]:null}
  function newSess(now){sess.push({s:new Date(now).toISOString().slice(0,19)+"Z",sec:0,c:{},sent:false});if(sess.length>20)sess=sess.slice(-20);saveSess()}
  function dirtySess(){return sess.filter(function(x){return !x.sent&&(x.sec>0||Object.keys(x.c).length>0)})}
- var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan","e_miss","e_side","e_other","tilt","brk","win","loss","graded","mood"],evs=[],devModel="";
+ var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan","e_miss","e_side","e_other","tilt","brk","win","loss","graded","mood","sw","v_prop"],evs=[],devModel="";
  try{var er=JSON.parse(localStorage.getItem(EVKEY)||"[]");if(Array.isArray(er))evs=er.filter(function(x){return x&&typeof x.t==="number"&&isFinite(x.t)&&x.t>1e12&&x.t<4.1e12&&EV_OK.indexOf(x.e)>-1}).slice(-300)}catch(e){}
  try{var sr=JSON.parse(localStorage.getItem(SESSKEY)||"[]");if(Array.isArray(sr))sess=sr.filter(function(x){return x&&typeof x==="object"&&typeof x.s==="string"&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x.s)&&x.c&&typeof x.c==="object"}).slice(-20).map(function(x){var c={};EV_OK.forEach(function(k){var n=Number(x.c[k]);if(isFinite(n)&&n>0)c[k]=Math.min(Math.floor(n),10000)});return {s:x.s,sec:clampN(x.sec,86400),c:c,sent:x.sent===true}})}catch(e){}
  function saveEvs(){try{if(evs.length)localStorage.setItem(EVKEY,JSON.stringify(evs));else localStorage.removeItem(EVKEY)}catch(e){}}
@@ -2254,10 +2309,14 @@ else if(ev.key===SKEY&&ev.newValue){
  setTimeout(maybeSend,3000);setInterval(function(){if(document.visibilityState==="visible")maybeSend()},60000);
 
  (function(){var pc=$("pilot");if(!pc)return;var st;try{st=shareState()}catch(e){return}
-  if(ingestUrl()&&!st.asked){pc.hidden=false}
+  function ready(){var w=$("welcome"),t=$("tour");return (!w||w.hidden)&&(!t||t.hidden)}
+  function showPilot(){var s3;try{s3=shareState()}catch(e){return}if(ingestUrl()&&!s3.asked&&ready())pc.hidden=false}
+  window.__pilotShow=showPilot;showPilot();
   function ans(yes){var s2=shareState();s2.asked=true;if(yes){s2.on=true;if(!s2.id)s2.id=newShareId();lastAct=Date.now();act.lastEnd=lastAct;act.day=new Date().toISOString().slice(0,10);act.sessions=1;saveAct();newSess(Date.now())}saveShare();pc.hidden=true;drawShare();if(yes)sendShare()}
   $("pilotYes").onclick=function(){ans(true)};$("pilotNo").onclick=function(){ans(false)}})();
- document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")maybeSend();else flushSess()});
+ var hiddenAt=0;
+ /* v32: leaving the app for a few seconds and coming straight back is counted, because it usually means "checking it against another calculator" */
+ document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible"){var away=hiddenAt?Date.now()-hiddenAt:0;hiddenAt=0;if(away>=3000&&away<=900000)bump("sw");maybeSend()}else{hiddenAt=Date.now();flushSess()}});
  /* when the app is put away, hand over the session once without waiting for an answer; the next open confirms it */
  function flushSess(){try{var st=shareState(),url=ingestUrl();if(!url||!st.on||navigator.onLine===false||!dirtySess().length||Date.now()-st.lastAt<90000)return;
   st.lastAt=Date.now();saveShare();fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(usagePayload()),credentials:"omit",referrerPolicy:"no-referrer",keepalive:true,mode:"no-cors"}).catch(function(){})}catch(e){}}
@@ -2299,7 +2358,8 @@ else if(ev.key===SKEY&&ev.newValue){
   {s:"calc",n:"calc",t:"Check, then log",x:"Tick your setup checklist and tag how you feel before you tap Log this trade. Your setup is graded A+, B or C."},
   {s:"journal",n:"journal",t:"Your journal",x:"Every logged trade lands here as one line. Tap a row to open it, and add the exit price when the trade closes. Switch to Analysis Journal to plan before you trade."},
   {s:"review",n:"review",t:"Review",x:"After 20 closed trades the app shows patterns in your own results: your grades, your moods, your sessions."},
-  {s:"settings",n:"settings",t:"Settings",x:"Back up your journal, install the app, and send your test notes. Replay this tour here any time."}
+  {s:"prop",n:"prop",t:"Prop firm tracker",x:"Enter your prop firm's rules once. This tab then shows your daily loss, max loss and profit target in dollars, and your rules for the day with a green, amber or red result. Tap Edit to change the setup."},
+  {s:"settings",n:"settings",t:"Settings",x:"Back up your journal, install the app, and replay this tour any time."}
  ],ti=0;
  function showStep(){
   var st=STEPS[ti];go(st.s);
@@ -2311,7 +2371,7 @@ else if(ev.key===SKEY&&ev.newValue){
  function endTour(){
   $("tour").hidden=true;NAMES.forEach(function(k){$("nav_"+k).classList.remove("pulse")});
   settings.welcomed=true;settings.toured=true;try{localStorage.setItem(SKEY,JSON.stringify(settings))}catch(e){}
-  $("welcome").hidden=true;go("calc");
+  $("welcome").hidden=true;go("calc");if(window.__pilotShow)window.__pilotShow();
  }
  window.__tour=function(){ti=0;showStep()};
  $("tNext").onclick=function(){if(ti>=STEPS.length-1)endTour();else{ti++;showStep()}};
