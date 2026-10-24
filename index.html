@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-3A+ZFSCH8YxPVW/ElZ6V7EM9wVF2E+EXeXnupQtE0RY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-QCI49iEfXu/pHcdKJpDqff9ejlKu8DGWSJKs+dVbJXs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -624,7 +624,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v27";
+var APP_V="v28";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -2248,8 +2248,10 @@ else if(ev.key===SKEY&&ev.newValue){
   if(st.on){sendShare()}else{evs=[];saveEvs();sess=[];saveSess();act={day:"",sec:0,sessions:0,total:0,lastEnd:0};saveAct();shareMsg("Sharing is off. Nothing more will be sent, and the saved activity list was deleted from this device.")}};
  $("shareNow").onclick=function(){sendShare()};
  function maybeSend(){try{var st=shareState();if(!ingestUrl()||!st.on||navigator.onLine===false)return;
-  var newDay=st.last!==new Date().toISOString().slice(0,10),more=Date.now()-st.lastAt>=10800000&&act.total-st.lastSec>=60,pend=dirtySess().length>0&&Date.now()-st.lastAt>=300000;if(newDay||more||pend)sendShare()}catch(e){}}
- setTimeout(maybeSend,3000);
+  var newDay=st.last!==new Date().toISOString().slice(0,10),gap=Date.now()-st.lastAt>=90000,sig=changeSig(),more=gap&&sig!==lastSig,pend=dirtySess().length>0&&gap;if(newDay||more||pend){lastSig=sig;sendShare()}}catch(e){}}
+ /* v28: while the tester is using the app, anything new is handed over within about 90 seconds (it used to wait up to 3 hours) */
+ var lastSig="";function changeSig(){var c=[];EV_OK.forEach(function(k){c.push(Number(usage[k])||0)});return JSON.stringify([c,evs.length,Math.floor(act.total/30),entries.length,plans.length])}
+ setTimeout(maybeSend,3000);setInterval(function(){if(document.visibilityState==="visible")maybeSend()},60000);
 
  (function(){var pc=$("pilot");if(!pc)return;var st;try{st=shareState()}catch(e){return}
   if(ingestUrl()&&!st.asked){pc.hidden=false}
@@ -2257,7 +2259,7 @@ else if(ev.key===SKEY&&ev.newValue){
   $("pilotYes").onclick=function(){ans(true)};$("pilotNo").onclick=function(){ans(false)}})();
  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")maybeSend();else flushSess()});
  /* when the app is put away, hand over the session once without waiting for an answer; the next open confirms it */
- function flushSess(){try{var st=shareState(),url=ingestUrl();if(!url||!st.on||navigator.onLine===false||!dirtySess().length||Date.now()-st.lastAt<300000)return;
+ function flushSess(){try{var st=shareState(),url=ingestUrl();if(!url||!st.on||navigator.onLine===false||!dirtySess().length||Date.now()-st.lastAt<90000)return;
   st.lastAt=Date.now();saveShare();fetch(url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(usagePayload()),credentials:"omit",referrerPolicy:"no-referrer",keepalive:true,mode:"no-cors"}).catch(function(){})}catch(e){}}
 
  /* ---- feedback goes to the same place as usage sharing (only when the tester taps Send) ---- */
