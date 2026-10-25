@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-X4WtEJ4V9svqtVJVQKSHnE/f4/PlV2921zCIlwjO6RU='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-T+ExmSsPNvkfbpdKDu6X4KqzRne+GTiCMpReRk0Nw4c='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -624,7 +624,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v38";
+var APP_V="v39";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -1859,7 +1859,7 @@ function propCalc(now){
  var RS=resetSpec(P),hr=RS.hr,z=RS.z,offOf=function(ms){try{return z?zoneOffsetMs(ms,z):-new Date(ms).getTimezoneOffset()*60000}catch(e){return 0}};
  var dKey=function(ms){return Math.floor((ms+offOf(ms)-hr*3600000)/864e5)};
  var startMs=P.start?Date.parse(P.start+"T00:00:00"):0;if(!isFinite(startMs))startMs=0;
- var tr=entries.filter(function(e){var r=e.result;return String(e.id).indexOf("demo-")!==0&&r&&r.closedAt&&typeof r.pnl==="number"&&isFinite(r.pnl)&&Date.parse(r.closedAt)>=startMs}).map(function(e){return {t:Date.parse(e.closedAt||e.result.closedAt),p:e.result.pnl}}).filter(function(x){return isFinite(x.t)}).sort(function(a,b){return a.t-b.t});
+ var tr=entries.filter(function(e){var r=e.result;return String(e.id).indexOf("demo-")!==0&&r&&r.closedAt&&typeof r.pnl==="number"&&isFinite(r.pnl)&&Date.parse(r.closedAt)>=startMs}).map(function(e){return {t:Date.parse(e.closedAt||e.result.closedAt),p:e.result.pnl,o:Date.parse(e.createdAt)}}).filter(function(x){return isFinite(x.t)}).sort(function(a,b){return a.t-b.t});
  var tdy=dKey(now),bal=P.size,peak=P.size,todayPnl=0,balStartDay=P.size,days={},lossesToday=0;
  tr.forEach(function(x){
   if(dKey(x.t)<tdy)balStartDay=bal+x.p;   /* balance after the last trade before today */
@@ -1872,9 +1872,11 @@ function propCalc(now){
  if(S){
   fromBroker=true;snapAge=Math.max(0,now-S.t);bal=S.b;peak=Math.max(P.size,S.b);
   P.snaps.forEach(function(q){if(q.b>peak)peak=q.b});
-  tr.forEach(function(x){if(x.t>S.t){bal+=x.p;if(bal>peak)peak=bal}});
+  /* v39: an equity figure already holds the open trades of that moment, so a trade opened before it is not added again when it closes */
+  var eqMode=P.basis!=="balance",after=function(x,ref){return x.t>ref&&!(eqMode&&isFinite(x.o)&&x.o<ref)};
+  tr.forEach(function(x){if(after(x,S.t)){bal+=x.p;if(bal>peak)peak=bal}});
   var S0=null;P.snaps.forEach(function(q){if(q.t<dayStart)S0=q});
-  if(S0){hasS0=true;var b0=S0.b;tr.forEach(function(x){if(x.t>S0.t&&x.t<dayStart)b0+=x.p});todayPnl=bal-b0;balStartDay=b0}
+  if(S0){hasS0=true;var b0=S0.b;tr.forEach(function(x){if(after(x,S0.t)&&x.t<dayStart)b0+=x.p});todayPnl=bal-b0;balStartDay=b0}
   else balStartDay=bal-todayPnl;
  }
  var base=P.dailyBase==="day"?balStartDay:P.size,dLimit=base*P.daily/100,dUsed=Math.max(0,-todayPnl),dRemain=Math.max(0,dLimit-dUsed);
@@ -1974,6 +1976,7 @@ function renderPropSetup(box,P,editing){
   var g=function(id){return $(id).value};
   var np=cleanProp({on:true,live:false,firm:g("pfFirm"),type:typ,size:g("pfSize"),start:g("pfStart"),daily:g("pfDaily"),max:g("pfMax"),dailyBase:g("pfDailyBase"),maxType:g("pfMaxType"),target:g("pfTarget"),days:g("pfDays"),risk:g("pfRisk")===""?0.5:g("pfRisk"),stop:g("pfStop"),basis:g("pfBasis"),reset:g("pfReset"),rHour:g("pfRHour"),rZone:g("pfRZone")});
   if(!(np.size>0)){err.textContent="Enter your account size so the limits can be worked out in dollars.";$("pfSize").focus();return}
+  bump("pf_set");
   var sn=(P.snaps||[]).slice(),bt=g("pfBal"),bv=parseFloat(bt);
   if(np.size!==P.size)sn=[];   /* a new account or challenge starts a new history */
   if(bt===""||!isFinite(bv)||bv<0)sn=[];else if(pre===""||np.size!==P.size||Math.abs(bv-pre)>0.004)sn.push({t:Date.now(),b:bv});
@@ -2025,7 +2028,7 @@ function balPanel(card,c,P){
   var sn=(P.snaps||[]).slice(),now=Date.now();
   if(i2&&i2.value!==""){var v2=parseFloat(i2.value);if(isFinite(v2)&&v2>=0)sn.push({t:Math.floor(c.dayStart)-1,b:v2})}
   sn.push({t:now,b:v});
-  settings.prop=cleanProp(Object.assign({},P,{snaps:sn}));saveSettings();renderProp()});
+  bump("pf_bal");settings.prop=cleanProp(Object.assign({},P,{snaps:sn}));saveSettings();renderProp()});
  row.appendChild(ok);row.appendChild(no);pn.appendChild(row);
  var t=card.querySelector(".pftiles");t.parentNode.insertBefore(pn,t.nextSibling);i.focus();
 }
@@ -2349,7 +2352,7 @@ else if(ev.key===SKEY&&ev.newValue){
  function curSess(){return sess.length?sess[sess.length-1]:null}
  function newSess(now){sess.push({s:new Date(now).toISOString().slice(0,19)+"Z",sec:0,c:{},sent:false});if(sess.length>20)sess=sess.slice(-20);saveSess()}
  function dirtySess(){return sess.filter(function(x){return !x.sent&&(x.sec>0||Object.keys(x.c).length>0)})}
- var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan","e_miss","e_side","e_other","tilt","brk","win","loss","graded","mood","sw","v_prop"],evs=[],devModel="";
+ var EVKEY="fx-calc-events-v1",EV_OK=["calc","log","exit","plan","card","imp","csv","bak","rst","v_calc","v_journal","v_review","v_settings","v_plan","e_miss","e_side","e_other","tilt","brk","win","loss","graded","mood","sw","v_prop","pf_bal","pf_set"],evs=[],devModel="";
  try{var er=JSON.parse(localStorage.getItem(EVKEY)||"[]");if(Array.isArray(er))evs=er.filter(function(x){return x&&typeof x.t==="number"&&isFinite(x.t)&&x.t>1e12&&x.t<4.1e12&&EV_OK.indexOf(x.e)>-1}).slice(-300)}catch(e){}
  try{var sr=JSON.parse(localStorage.getItem(SESSKEY)||"[]");if(Array.isArray(sr))sess=sr.filter(function(x){return x&&typeof x==="object"&&typeof x.s==="string"&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(x.s)&&x.c&&typeof x.c==="object"}).slice(-20).map(function(x){var c={};EV_OK.forEach(function(k){var n=Number(x.c[k]);if(isFinite(n)&&n>0)c[k]=Math.min(Math.floor(n),10000)});return {s:x.s,sec:clampN(x.sec,86400),c:c,sent:x.sent===true}})}catch(e){}
  function saveEvs(){try{if(evs.length)localStorage.setItem(EVKEY,JSON.stringify(evs));else localStorage.removeItem(EVKEY)}catch(e){}}
