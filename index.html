@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-kn6tbt6vrG43QMOqWP2+Wi3XPNNLc4CPJMW/iKBdFJw='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gpEo0NHdvhYittw/1fdFxMyE/hG0675cfJwtChXgfGM=' 'sha256-1Y2T0jfcNNIgVJYAcI683U0Jo/7aqFt1Qv4/+LZHzCA='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'none'; form-action 'none'; worker-src 'self'; manifest-src 'self'">
 <meta name="robots" content="noindex,nofollow">
 <script src="config.js"></script>
 <title>PipFrame Trade Calculator</title>
@@ -231,6 +231,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .pfbtn{min-height:44px;min-width:64px;padding:0 18px;border:1.5px solid rgba(212,175,55,.7);border-radius:999px;background:transparent;color:var(--gold);font:inherit;font-weight:700;cursor:pointer}
 .pfchips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}.pfchips button{min-height:48px;border-radius:999px;border:1.5px solid rgba(212,175,55,.6);background:#121214;color:var(--gold);font:inherit;font-weight:600;cursor:pointer}.pfchips button[aria-pressed="true"]{background:#d9b649;color:#121212;border-color:#d9b649}
 .pfh3{font-family:"Playfair Display",Georgia,serif;font-size:1.25rem;margin:18px 0 4px;color:var(--text,#f4f1e8)}.pfbar{height:10px;border-radius:99px;background:#3a3d45;overflow:hidden;margin:6px 0 14px}.pfbar i{display:block;height:100%;border-radius:99px;background:#22c55e}.pfbar i.amber{background:#d9b649}.pfbar i.red{background:#e0504f}
+.pfnewbox{border:1px solid rgba(212,175,55,.5);border-radius:14px;padding:12px;margin:12px 0;background:rgba(212,175,55,.06)}.pfnewbox input{margin-top:6px}.pfnew{font-size:.62rem;background:#D4AF37;color:#121212;border-radius:8px;padding:2px 7px;margin-left:8px;font-weight:700;vertical-align:middle}.pftap{text-align:left;font:inherit;color:inherit;cursor:pointer;border:1px dashed rgba(230,211,168,.5)}.pftaphint{display:block;font-size:.72rem;color:var(--gold);margin-top:3px}.pfstale{color:#ffd9a0}
 .pfrow{display:flex;justify-content:space-between;gap:10px;font-size:.9rem}.pfrow b{text-align:right}.pftiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pftile{background:rgba(255,255,255,.04);border-radius:12px;padding:10px 12px;font-size:.78rem;color:var(--mute)}.pftile b{display:block;color:var(--text,#f4f1e8);font-size:.95rem;margin-top:3px}
 .pfcard{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px;margin:12px 0}.pfbar+.pfrow{margin-top:0}
 .rseg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.rseg span{text-align:center;padding:12px 4px;border-radius:12px;background:#26282d;color:#7d8088;font-weight:600;font-size:.88rem}
@@ -622,7 +623,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v34";
+var APP_V="v37";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -1372,6 +1373,8 @@ function importReport(file){
    backupMsg=res.rows.length?("Imported "+add.length+" new trade"+(add.length===1?"":"s")+" ("+dup+" already here). Imported trades have no setup grade or mood, so they only count in the overall and discipline numbers."+(res.warnings.length?" "+res.warnings.join(" "):"")):("Nothing imported. "+(res.warnings[0]||"No trades found in that file.")+" If this is a real report from your broker, send it to whoever gave you the app so the importer can be fixed.");
   }catch(e){backupMsg="Could not read that file, so nothing was changed."}
   render();
+  if(window.__fromProp){window.__fromProp=false;propMsg=backupMsg.split(" Imported trades")[0]+" Report times use your broker's clock, so check that today's trades sit on the right day."}
+  if(typeof renderProp==="function")renderProp();
  };
  rd.readAsArrayBuffer(file);
 }
@@ -1799,6 +1802,10 @@ function drawTilt(){
 }
 
 /* ---- prop firm mode: reads closed trades in the journal, nothing is sent anywhere ---- */
+function cleanSnaps(a){   /* balances the trader copied from their broker: when, and how much */
+ return (Array.isArray(a)?a:[]).filter(function(x){return x&&typeof x==="object"&&typeof x.t==="number"&&isFinite(x.t)&&x.t>1e12&&x.t<4.1e12&&typeof x.b==="number"&&isFinite(x.b)&&x.b>=0&&x.b<=1e9}).map(function(x){return {t:Math.floor(x.t),b:Math.round(x.b*100)/100}}).sort(function(p,q){return p.t-q.t}).slice(-60);
+}
+function agoText(ms){var m=Math.round(ms/60000);if(m<2)return "just now";if(m<90)return m+" min ago";var hh=Math.round(m/60);if(hh<36)return hh+" h ago";return Math.round(hh/24)+" days ago"}
 function cleanProp(o){
  o=o&&typeof o==="object"&&!Array.isArray(o)?o:{};
  function pn(v,max,dflt){v=Number(v);return isFinite(v)&&v>=0?Math.min(v,max):dflt}
@@ -1806,7 +1813,7 @@ function cleanProp(o){
  return {on:o.on===true,live:o.live===true,firm:typeof o.firm==="string"?o.firm.replace(/[\u0000-\u001F]/g,"").slice(0,40):"",
   type:["instant","one","two"].indexOf(o.type)>-1?o.type:"instant",size:pn(o.size,1e9,0),daily:pn(o.daily,100,0),max:pn(o.max,100,0),
   dailyBase:o.dailyBase==="day"?"day":"size",maxType:o.maxType==="trailing"?"trailing":"static",target:pn(o.target,1000,0),
-  days:Math.floor(pn(o.days,365,0)),risk:pn(o.risk,100,0.5),stop:Math.floor(pn(o.stop,50,0)),start:st};
+  days:Math.floor(pn(o.days,365,0)),risk:pn(o.risk,100,0.5),stop:Math.floor(pn(o.stop,50,0)),start:st,snaps:cleanSnaps(o.snaps),basis:o.basis==="equity"?"equity":"balance"};
 }
 
 /* ---- rules for the day (v26): her checklist, ticks are saved per day on this phone only ---- */
@@ -1847,6 +1854,16 @@ function propCalc(now){
   if(dKey(x.t)===tdy){todayPnl+=x.p;if(x.p<0)lossesToday++}
  });
  if(!tr.some(function(x){return dKey(x.t)<tdy}))balStartDay=P.size;
+ /* v35: a balance copied from the broker is the truth. Trades closed after it adjust it, trades before it are already inside it. */
+ var S=P.snaps&&P.snaps.length?P.snaps[P.snaps.length-1]:null,fromBroker=false,snapAge=0,hasS0=false,dayStart=tdy*864e5+hr*3600000-offOf(now);
+ if(S){
+  fromBroker=true;snapAge=Math.max(0,now-S.t);bal=S.b;peak=Math.max(P.size,S.b);
+  P.snaps.forEach(function(q){if(q.b>peak)peak=q.b});
+  tr.forEach(function(x){if(x.t>S.t){bal+=x.p;if(bal>peak)peak=bal}});
+  var S0=null;P.snaps.forEach(function(q){if(q.t<dayStart)S0=q});
+  if(S0){hasS0=true;var b0=S0.b;tr.forEach(function(x){if(x.t>S0.t&&x.t<dayStart)b0+=x.p});todayPnl=bal-b0;balStartDay=b0}
+  else balStartDay=bal-todayPnl;
+ }
  var base=P.dailyBase==="day"?balStartDay:P.size,dLimit=base*P.daily/100,dUsed=Math.max(0,-todayPnl),dRemain=Math.max(0,dLimit-dUsed);
  var mAllowed=P.size*P.max/100,dd=Math.max(0,(P.maxType==="trailing"?peak:P.size)-bal),mUsed=mAllowed>0?dd/mAllowed:0,floor=(P.maxType==="trailing"?peak:P.size)-mAllowed;
  var tAmt=P.size*P.target/100,prog=tAmt>0?Math.max(0,(bal-P.size)/tAmt):0;
@@ -1856,7 +1873,7 @@ function propCalc(now){
  if(P.max>0&&mUsed>=1){st="red";why.push("max loss limit reached")}
  if(stopHit){st="red";why.push("you have taken "+lossesToday+" losses today, your stop rule")}
  if(st==="green"){if(P.daily>0&&dPct>=0.6){st="amber";why.push("daily loss "+Math.round(dPct*100)+"% used")}if(P.max>0&&mUsed>=0.6){st="amber";why.push("max loss "+Math.round(mUsed*100)+"% used")}}
- return {P:P,bal:bal,peak:peak,todayPnl:todayPnl,dLimit:dLimit,dUsed:dUsed,dRemain:dRemain,dPct:dPct,mAllowed:mAllowed,mUsed:mUsed,floor:floor,tAmt:tAmt,prog:prog,nDays:nDays,capUsd:capUsd,lossesToday:lossesToday,status:st,why:why,n:tr.length};
+ return {P:P,bal:bal,peak:peak,todayPnl:todayPnl,dLimit:dLimit,dUsed:dUsed,dRemain:dRemain,dPct:dPct,mAllowed:mAllowed,mUsed:mUsed,floor:floor,tAmt:tAmt,prog:prog,nDays:nDays,capUsd:capUsd,lossesToday:lossesToday,status:st,why:why,n:tr.length,fromBroker:fromBroker,snapAge:snapAge,hasS0:hasS0,dayStart:dayStart};
 }
 function drawProp(){
  var nb=$("propNote");if(!nb)return;nb.hidden=true;nb.className="plannote";
@@ -1893,6 +1910,14 @@ function renderPropSetup(box,P,editing){
  box.appendChild(chips);
  var wrap=h("div");box.appendChild(wrap);
  field(wrap,"pfSize","Account Size ($)","e.g. 10,000",P.size||"");
+ var c0=P.on&&P.size>0&&P.snaps.length?propCalc(Date.now()):null,pre=c0?Math.round(c0.bal*100)/100:"";
+ var bw=h("div","pfnewbox"),bl=h("label",null,"Current balance ($)");bl.setAttribute("for","pfBal");bl.appendChild(h("span","pfnew","New"));bw.appendChild(bl);
+ bw.appendChild(h("p","note","Copy it from your broker or prop dashboard. Leave it empty to use the trades in your journal only."));
+ var bi=document.createElement("input");bi.id="pfBal";bi.type="number";bi.inputMode="decimal";bi.min="0";bi.step="any";bi.placeholder="e.g. 10,250.40";if(pre!=="")bi.value=pre;bw.appendChild(bi);
+ var bsl=h("label",null,"Your firm measures loss on");bsl.setAttribute("for","pfBasis");bsl.style.marginTop="12px";bw.appendChild(bsl);
+ var bss=document.createElement("select");bss.id="pfBasis";[["balance","Balance (closed trades only)"],["equity","Equity (includes open trades)"]].forEach(function(o){var op=h("option",null,o[1]);op.value=o[0];bss.appendChild(op)});bss.value=P.basis;bw.appendChild(bss);
+ bw.appendChild(h("p","note","Not sure? Look for \"daily drawdown\" on your firm's rules page. Balance moves only when a trade closes. Equity also moves while a trade is open."));
+ wrap.appendChild(bw);
  wrap.appendChild(h("h3","pfh3","Prop Firm Rules"));
  field(wrap,"pfDaily","Maximum Daily Loss Limit (%)","e.g. 5",P.daily||"");
  field(wrap,"pfMax","Overall / Max Loss Limit (%)","e.g. 10",P.max||"");
@@ -1912,8 +1937,12 @@ function renderPropSetup(box,P,editing){
  var go=h("button","btn",editing?"Save changes":"Continue");go.type="button";go.id="pfContinue";
  go.addEventListener("click",function(){
   var g=function(id){return $(id).value};
-  var np=cleanProp({on:true,live:false,firm:g("pfFirm"),type:typ,size:g("pfSize"),start:g("pfStart"),daily:g("pfDaily"),max:g("pfMax"),dailyBase:g("pfDailyBase"),maxType:g("pfMaxType"),target:g("pfTarget"),days:g("pfDays"),risk:g("pfRisk")===""?0.5:g("pfRisk"),stop:g("pfStop")});
+  var np=cleanProp({on:true,live:false,firm:g("pfFirm"),type:typ,size:g("pfSize"),start:g("pfStart"),daily:g("pfDaily"),max:g("pfMax"),dailyBase:g("pfDailyBase"),maxType:g("pfMaxType"),target:g("pfTarget"),days:g("pfDays"),risk:g("pfRisk")===""?0.5:g("pfRisk"),stop:g("pfStop"),basis:g("pfBasis")});
   if(!(np.size>0)){err.textContent="Enter your account size so the limits can be worked out in dollars.";$("pfSize").focus();return}
+  var sn=(P.snaps||[]).slice(),bt=g("pfBal"),bv=parseFloat(bt);
+  if(np.size!==P.size)sn=[];   /* a new account or challenge starts a new history */
+  if(bt===""||!isFinite(bv)||bv<0)sn=[];else if(pre===""||np.size!==P.size||Math.abs(bv-pre)>0.004)sn.push({t:Date.now(),b:bv});
+  np.snaps=cleanSnaps(sn);
   err.textContent="";settings.prop=np;saveSettings();propEdit=false;renderProp();window.scrollTo(0,0)});
  box.appendChild(go);
  if(!editing){var lv=h("button","btn ghost","I trade a live account (no firm limits)");lv.type="button";lv.id="pfLive";lv.addEventListener("click",function(){settings.prop=cleanProp({live:true});saveSettings();propEdit=false;renderProp()});box.appendChild(lv)}
@@ -1947,6 +1976,25 @@ function ruleBlock(box,stateHost){
  r.appendChild(h("p","note","Green is all ticked, amber is one or two missing, red is three or more missing. Ticks reset every new day."));
  box.appendChild(r);
 }
+function balPanel(card,c,P){
+ var pn=h("div","pfnewbox");pn.id="pfBalPanel";
+ var l=h("label",null,(P.basis==="equity"?"Equity":"Balance")+" now ($)");l.setAttribute("for","pfBalNow");pn.appendChild(l);
+ var i=document.createElement("input");i.id="pfBalNow";i.type="number";i.inputMode="decimal";i.min="0";i.step="any";i.value=Math.round(c.bal*100)/100;pn.appendChild(i);
+ var i2=null;
+ if(!c.hasS0){var l2=h("label",null,"Balance when today started ($), optional");l2.setAttribute("for","pfBalStart");pn.appendChild(l2);pn.appendChild(h("p","note","Makes today's loss exact when some trades were not logged here."));i2=document.createElement("input");i2.id="pfBalStart";i2.type="number";i2.inputMode="decimal";i2.min="0";i2.step="any";pn.appendChild(i2)}
+ var er=h("p","err");er.id="pfBalErr";er.setAttribute("role","alert");pn.appendChild(er);
+ var row=h("div","btnrow"),ok=h("button","btn","Save balance"),no=h("button","btn ghost","Cancel");ok.type=no.type="button";ok.id="pfBalSave";
+ no.addEventListener("click",function(){pn.remove()});
+ ok.addEventListener("click",function(){
+  var v=parseFloat(i.value);if(!isFinite(v)||v<0){er.textContent="Enter the balance as a number.";return}
+  var sn=(P.snaps||[]).slice(),now=Date.now();
+  if(i2&&i2.value!==""){var v2=parseFloat(i2.value);if(isFinite(v2)&&v2>=0)sn.push({t:Math.floor(c.dayStart)-1,b:v2})}
+  sn.push({t:now,b:v});
+  settings.prop=cleanProp(Object.assign({},P,{snaps:sn}));saveSettings();renderProp()});
+ row.appendChild(ok);row.appendChild(no);pn.appendChild(row);
+ var t=card.querySelector(".pftiles");t.parentNode.insertBefore(pn,t.nextSibling);i.focus();
+}
+var propMsg="";
 function renderPropToday(box,P,configured){
  var hd=h("div","pfhead");var pill=h("span","pfpill","Step 2 of 2");hd.appendChild(pill);
  var eb=h("button","pfbtn","Edit");eb.type="button";eb.id="pfEdit";eb.addEventListener("click",function(){propEdit=true;renderProp();window.scrollTo(0,0)});hd.appendChild(eb);box.appendChild(hd);
@@ -1966,11 +2014,16 @@ function renderPropToday(box,P,configured){
   if(P.risk>0)tile("Risk per trade",usd0(c.capUsd)+" max ("+P.risk+"%)");
   if(P.days>0)tile("Trading days",c.nDays+" of "+P.days+" min");
   if(P.stop>0)tile("Losses today",c.lossesToday+" (stop at "+P.stop+")");
-  tile("Balance (closed trades)",usd0(c.bal));
+  var bt=h("button","pftile pftap",c.fromBroker?(P.basis==="equity"?"Equity":"Balance")+" · updated "+agoText(c.snapAge):"Balance (closed trades)");bt.type="button";bt.id="pfBalTile";bt.appendChild(h("b",null,usd0(c.bal)));bt.appendChild(h("span","pftaphint","Tap to update"));
+  bt.addEventListener("click",function(){var old=$("pfBalPanel");if(old){old.remove();return}balPanel(card,c,P)});tl.appendChild(bt);
   card.appendChild(tl);
+  if(c.fromBroker&&Date.now()-c.snapAge<c.dayStart)card.appendChild(h("p","note pfstale","You have not updated your "+(P.basis==="equity"?"equity":"balance")+" today (last update "+agoText(c.snapAge)+"). Update it before you trade so today's numbers are right."));
   var chip=h("div","pfmsg "+c.status,{green:"Inside your limits.",amber:"Careful: "+c.why.join(", ")+".",red:c.why.join(", ")+"."}[c.status]);chip.id="pfStatus";chip.setAttribute("role","status");chip.style.marginTop="12px";card.appendChild(chip);
   box.appendChild(card);
  }
+ if(propMsg){var pm=h("p","note pfmsgnote",propMsg);pm.id="pfImportMsg";box.appendChild(pm);propMsg=""}
+ var ib=h("button","btn ghost","Import broker report");ib.type="button";ib.id="pfImport";ib.addEventListener("click",function(){window.__fromProp=true;$("importFile").click()});box.appendChild(ib);
+ box.appendChild(h("p","note","Brings in every trade from your MT5 history, so trading days, losses and your balance count all of them. In MT5: History, right-click, Report, HTML."));
  ruleBlock(box);
  box.appendChild(h("p","note","Counts closed trades only, not open ones. Firms count loss in different ways, so check yours. This is a calculation tool, not advice."));
 }
@@ -2023,7 +2076,7 @@ function unitLabel(s){return s.unit==="oz"?"Ounces":s.unit==="BTC"?"Bitcoin":s.i
 function render(){
  var list=$("list");list.innerHTML="";
  var tools=$("tools");tools.innerHTML="";
- var im0=h("button","link","Import report");im0.onclick=function(){$("importFile").click()};tools.appendChild(im0);
+ var im0=h("button","link","Import report");im0.onclick=function(){window.__fromProp=false;$("importFile").click()};tools.appendChild(im0);
  if(!entries.length){
   list.appendChild(h("p","empty","Nothing logged yet. Use Calculate, then tap Log this trade. New device? Open Settings and tap Restore."));
  } else {
