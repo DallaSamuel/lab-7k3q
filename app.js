@@ -11,7 +11,7 @@ var GROUPS=[
 ];
 var CONV={EUR:["EURUSD",false,"1.08"],GBP:["GBPUSD",false,"1.27"],AUD:["AUDUSD",false,"0.66"],NZD:["NZDUSD",false,"0.60"],CAD:["USDCAD",true,"1.36"],CHF:["USDCHF",true,"0.90"],JPY:["USDJPY",true,"150.00"]};
 var SESSIONS=["Sydney","Asian (Tokyo)","London","New York","London-NY overlap","Other"];
-var APP_V="v42";
+var APP_V="v43";
 var MOODS=["Calm","Confident","Anxious","Greedy","FOMO","Revenge","Bored"];
 var MOODS_POST=["Calm","Satisfied","Relieved","Disappointed","Frustrated","Regretful","Angry","Confident"];
 var KEY="fx-calc-journal-v1";
@@ -2024,7 +2024,7 @@ else if(ev.key===SKEY&&ev.newValue){
  var rt=$("replayTour");if(rt)rt.onclick=function(){window.__tour()};
  window.__go=go;setTimeout(drawPropNudge,0);
  /* v39: after an update, say once what changed. A brand-new user just gets the welcome instead. */
- var WHATS_NEW=["Backups can be locked with a password: nobody can read the file without it.","A plain privacy note: what stays on your phone, what is shared if you join the test, and how to have it deleted.","Small security tidy-ups behind the scenes."];
+ var WHATS_NEW=["Cards, lists and tab strips now share one background colour, so every screen looks the same.","Dropdowns open the app's own list instead of the phone's menu, so they match too. Suggested by Faithful."];
  (function(){var seen=settings.seenV;if(seen===APP_V)return;if(!settings.welcomed){settings.seenV=APP_V;saveSettings();return}
   var sc=$("scr_calc");if(!sc)return;var cd=h("div","pfnewbox");cd.id="whatsNew";cd.setAttribute("role","status");
   cd.appendChild(h("h3","pfh3","Updated to "+APP_V));var ul=h("ul","wnlist");WHATS_NEW.forEach(function(t){ul.appendChild(h("li",null,t))});cd.appendChild(ul);
@@ -2035,4 +2035,59 @@ else if(ev.key===SKEY&&ev.newValue){
  var hsh=(location.hash||"").slice(1);if(NAMES.indexOf(hsh)>0)go(hsh);
 })();
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+})();
+
+/* v43: dropdowns that match the app. A tap on a dropdown opens the app's own list (the same background as the cards)
+   instead of the phone's system menu, whose colour follows the phone's theme. The real <select> keeps its value and
+   still fires its usual events, so nothing else changes. Keyboard users keep the native list; iPhone keeps its wheel. */
+(function(){
+ var ios=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+ if(ios)return;
+ var sheet=null,list=null,title=null,cur=null;
+ function el(t,c){var e=document.createElement(t);if(c)e.className=c;return e}
+ function build(){
+  sheet=el("div","sheet optsheet");sheet.hidden=true;sheet.id="optSheet";sheet.setAttribute("role","dialog");sheet.setAttribute("aria-modal","true");
+  var bg=el("div","sheetbg");bg.addEventListener("click",close);
+  var p=el("div","sheetpanel optpanel"),g=el("div","grab"),hd=el("div","sheethead");
+  title=el("b","opttitle");var cb=el("button","link");cb.type="button";cb.textContent="Close";cb.addEventListener("click",close);
+  hd.appendChild(title);hd.appendChild(cb);
+  list=el("div","sheetlist");list.setAttribute("role","listbox");
+  p.appendChild(g);p.appendChild(hd);p.appendChild(list);sheet.appendChild(bg);sheet.appendChild(p);document.body.appendChild(sheet);
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&sheet&&!sheet.hidden)close()});
+ }
+ function labelFor(s){
+  var t=s.getAttribute("aria-label")||"";
+  if(!t&&s.id){var ls=document.getElementsByTagName("label");for(var i=0;i<ls.length;i++)if(ls[i].htmlFor===s.id){t=ls[i].textContent;break}}
+  t=String(t).replace(/\s+/g," ").trim();
+  return t?t.slice(0,80):"Choose one";
+ }
+ function add(o){
+  if(o.hidden)return;
+  var b=el("button","optrow");b.type="button";b.setAttribute("role","option");b.textContent=o.textContent;
+  b.setAttribute("aria-selected",o.selected?"true":"false");if(o.disabled)b.disabled=true;
+  b.addEventListener("click",function(){
+   var s=cur;if(!s)return;var changed=!o.selected;o.selected=true;close();
+   if(changed){s.dispatchEvent(new Event("input",{bubbles:true}));s.dispatchEvent(new Event("change",{bubbles:true}))}
+  });
+  list.appendChild(b);
+ }
+ function open(s){
+  if(!sheet)build();cur=s;title.textContent=labelFor(s);list.textContent="";
+  Array.prototype.forEach.call(s.children,function(ch){
+   if(ch.tagName==="OPTGROUP"){var gh=el("div","optgroup");gh.textContent=ch.label;list.appendChild(gh);Array.prototype.forEach.call(ch.children,add)}
+   else if(ch.tagName==="OPTION")add(ch);
+  });
+  sheet.hidden=false;document.body.style.overflow="hidden";
+  var on=list.querySelector('[aria-selected="true"]')||list.querySelector("button");
+  if(on){try{on.focus({preventScroll:true})}catch(e){}if(on.scrollIntoView)on.scrollIntoView({block:"center"})}
+ }
+ function close(){
+  if(!sheet||sheet.hidden)return;sheet.hidden=true;document.body.style.overflow="";
+  var s=cur;cur=null;if(s){try{s.focus({preventScroll:true})}catch(e){}}
+ }
+ document.addEventListener("mousedown",function(e){
+  var t=e.target,s=t&&t.closest?t.closest("select"):null;
+  if(!s||s.disabled||s.multiple||e.button!==0)return;
+  e.preventDefault();open(s);
+ },true);
 })();

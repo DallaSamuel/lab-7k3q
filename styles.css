@@ -1,7 +1,7 @@
 /* PipFrame styles. Moved out of index.html in v39. */
 @font-face{font-family:Poppins;font-weight:400;font-display:swap;src:url(fonts/poppins-400.woff) format('woff')}@font-face{font-family:Poppins;font-weight:500;font-display:swap;src:url(fonts/poppins-500.woff) format('woff')}@font-face{font-family:Poppins;font-weight:600 700;font-display:swap;src:url(fonts/poppins-700.woff) format('woff')}
 
-:root{--gold:#D4AF37;--text:#f4f4f5;--mute:#9a9ea6;--red:#e5736b;--green:#5fc98b;
+:root{--surface:linear-gradient(155deg,#272a30 0%,#17191d 55%,#0e0f12 100%);--surface-flat:#1b1d21;--gold:#D4AF37;--text:#f4f4f5;--mute:#9a9ea6;--red:#e5736b;--green:#5fc98b;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px);background:#050506}
 *{box-sizing:border-box}
@@ -228,7 +228,7 @@ input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-
 .pfmsg{border-radius:12px;padding:12px;margin-top:6px;font-size:.88rem}.pfmsg b{display:block;font-size:.98rem;margin-top:2px}.pfmsg.green{background:#17341f;color:#cdeed9}.pfmsg.amber{background:#3a2e0e;color:#e8c764}.pfmsg.red{background:#4a1818;color:#ffcfcb}.pfmsg.none{background:#26282d;color:#c9cbd2}
 .pf-green{background:#1f4d33;color:#d8f5e3;border:1px solid #2f7a52}.pf-amber{background:#5a4306;color:#ffe9a8;border:1px solid #a37c10}.pf-red{background:#6b1b1b;color:#ffd9d6;border:1px solid #b53a3a}
 /* Look: Black and champagne (v19) */
-html[data-look="champagne"]{--gold:#E6D3A8;--text:#f2ede3;--mute:#a39c8d;background:#000}
+html[data-look="champagne"]{--surface:#0b0b0c;--surface-flat:#0b0b0c;--gold:#E6D3A8;--text:#f2ede3;--mute:#a39c8d;background:#000}
 html[data-look="champagne"] body{background:#000}
 html[data-look="champagne"] h1{background:linear-gradient(180deg,#F7E7CE,#E6D3A8 60%,#C9B07C);-webkit-background-clip:text;background-clip:text}
 html[data-look="champagne"] .tabs{background:#000;border-color:rgba(230,211,168,.3);box-shadow:none}
@@ -288,3 +288,19 @@ html[data-look="champagne"] .bnav button[aria-current="page"]::after{box-shadow:
 .privpage .panel{margin:14px 0}
 .plist{margin:6px 0 8px 18px;padding:0;line-height:1.55;font-size:.92rem}
 .plink{color:var(--gold);font-weight:600}
+
+/* v43: one background for cards, lists, tab strips and dropdowns (Faithful's suggestion) */
+.panel{background:var(--surface)}
+.sheetpanel{background:var(--surface)}
+html[data-look="champagne"] .sheetpanel{background:var(--surface);border-top-color:rgba(230,211,168,.4)}
+.tabs,.seg,html[data-look="champagne"] .tabs,html[data-look="champagne"] .seg{background:var(--surface-flat);box-shadow:none}
+.cat{background:transparent}
+.sheethead input{background:rgba(0,0,0,.25)}
+.optpanel{height:auto;max-height:75vh;max-height:75dvh}
+.opttitle{flex:1;font-weight:600;color:var(--text);font-size:.95rem;min-width:0}
+.optsheet .sheetlist{padding-top:8px}
+.optrow{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:52px;padding:12px 8px;text-align:left;background:none;border:0;border-bottom:1px solid rgba(255,255,255,.06);color:var(--text);font:inherit;cursor:pointer}
+.optrow[aria-selected="true"]{color:var(--gold);font-weight:600}
+.optrow[aria-selected="true"]::after{content:"\2713";color:var(--gold)}
+.optrow:disabled{opacity:.45;cursor:default}
+.optgroup{color:var(--gold);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:14px 8px 4px}
